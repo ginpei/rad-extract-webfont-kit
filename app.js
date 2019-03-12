@@ -3,6 +3,10 @@ const fs = require('fs');
 const misc = require('./src/misc');
 const multer  = require('multer');
 
+if (!process.version.startsWith('v4.')) {
+  console.warn('Node.js v4 is expected.'); // hope we would upgrade
+}
+
 const port = process.env.PORT || 3000;
 
 const app = express();
