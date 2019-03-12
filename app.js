@@ -19,7 +19,7 @@ const kitUpload = upload.fields([
 ]);
 
 app.get('/', (req, res) => {
-  const content = fs.readFileSync('routes/index.html', 'utf8').toString();
+  const content = fs.readFileSync('views/index.html', 'utf8').toString();
   res.send(content);
 });
 
