@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
+const misc = require('./src/misc');
 const multer  = require('multer');
-const yauzl = require("yauzl");
 
 const port = process.env.PORT || 3000;
 
@@ -23,48 +23,15 @@ app.post('/fonts/upload', kitUpload, (req, res) => {
   const kit = req.files['webfont-kit'][0];
   console.log('# kit', kit);
 
-  if (!fs.existsSync('tmp')) {
-    fs.mkdirSync('tmp');
-  }
-  if (!fs.existsSync('tmp/fonts')) {
-    fs.mkdirSync('tmp/fonts');
-  }
-
-  yauzl.open(kit.path, { lazyEntries: true }, (err, zipfile) => {
-    if (err) {
+  misc.extractFontFiles(kit.path, (error) => {
+    if (error) {
+      console.error(error);
       res.status(500);
-      res.send('Failed to open zip');
+      res.send(error.message);
+      return;
     }
 
-    zipfile.readEntry();
-    zipfile.on('entry', (entry) => {
-      const fileName = entry.fileName;
-      console.log('# file', fileName);
-
-      if (/\.ttf$/.test(fileName)) {
-        const posLastDelimiter = fileName.lastIndexOf('/');
-        const fontFileName =
-          posLastDelimiter < 0
-            ? fileName
-            : fileName.slice(posLastDelimiter + 1);
-        const buffer = entry.extraFields.data;
-        try {
-          fs.writeFileSync(`tmp/fonts/${fontFileName}`, buffer);
-        } catch (error) {
-          console.error(error);
-          res.status(500);
-          res.send('Failed to extract files');
-          return;
-        }
-      }
-
-      // next
-      zipfile.readEntry();
-    });
-    zipfile.on('end', () => {
-      res.status(200);
-      res.send('OK');
-    });
+    res.send('OK');
   });
 });
 
