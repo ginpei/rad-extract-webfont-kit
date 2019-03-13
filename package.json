@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
+    "fontmin": "^0.9.7-beta",
     "multer": "^1.4.1",
     "nodemon": "^1.18.10",
     "yauzl": "^2.10.0"

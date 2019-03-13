@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const misc = require('./src/misc');
 const multer  = require('multer');
+const path = require('path');
 
 if (!process.version.startsWith('v4.')) {
   console.warn('Node.js v4 is expected.'); // hope we would upgrade
@@ -18,18 +19,18 @@ const kitUpload = upload.fields([
   },
 ]);
 
+app.use('/', express.static('public'));
+
 app.get('/', (req, res) => {
   const content = fs.readFileSync('views/index.html', 'utf8').toString();
   res.send(content);
 });
 
 app.post('/fonts/upload', kitUpload, (req, res) => {
+  const fontsDir = path.join(__dirname, 'public/uploads/fonts/');
   const kit = req.files['webfont-kit'][0];
-  console.log('# kit', kit);
-
-  misc.extractFontFiles(kit.path, (error) => {
+  misc.extractFontKit(kit.path, fontsDir, (error) => {
     if (error) {
-      console.error(error);
       res.status(500);
       res.send(error.message);
       return;

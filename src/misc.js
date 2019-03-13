@@ -1,3 +1,4 @@
+const Fontmin = require('fontmin');
 const fs = require('fs');
 const path = require('path');
 const yauzl = require("yauzl");
@@ -5,7 +6,6 @@ const yauzl = require("yauzl");
 /**
  * @param {string} dirPath
  */
-module.exports.prepareDir = prepareDir
 function prepareDir(dirPath) {
   const dirNames = dirPath.split('/').reverse();
   var curPath = '';
@@ -16,14 +16,58 @@ function prepareDir(dirPath) {
     }
   }
 }
+module.exports.prepareDir = prepareDir
+
+/**
+ * @param {ZipFile} zipFile
+ * @param {Entry} entry
+ * @param {string} destPath
+ * @param {(err: Error | null) => void} callback
+ */
+function extract(zipFile, entry, destPath, callback) {
+  zipFile.openReadStream(entry, function(err, readStream) {
+    if (err) {
+      console.error(err);
+      callback(new Error('Failed to extract zipped file'));
+      return;
+    }
+
+    readStream.on('end', () => callback(null));
+
+    const writeStream = fs.createWriteStream(destPath);
+    readStream.pipe(writeStream);
+  });
+}
+
+/**
+ * @param {string} filePath
+ * @param {string} destPath
+ * @param {string} glyph
+ * @param {(err: Error | null) => void} callback
+ */
+function subsetFont(filePath, destPath, glyph, callback) {
+  const fontmin = new Fontmin()
+    .use(Fontmin.glyph({ text: glyph }))
+    .src(filePath)
+    .dest(destPath);
+  fontmin.run((err, files) => {
+    if (err) {
+      console.error(err);
+      callback(new Error('Failed to minimize font'));
+      return;
+    }
+
+    callback(null);
+  });
+}
 
 /**
  * @param {string} zipPath
+ * @param {string} fontsDir
  * @param {(err: Error | null) => void} callback
  */
-module.exports.extractFontFiles = extractFontFiles;
-function extractFontFiles(zipPath, callback) {
-  prepareDir('tmp/fonts');
+function extractFontKit(zipPath, fontsDir, callback) {
+  prepareDir(fontsDir);
 
   yauzl.open(zipPath, { lazyEntries: true }, (err, zipFile) => {
     if (err) {
@@ -33,18 +77,40 @@ function extractFontFiles(zipPath, callback) {
 
     zipFile.readEntry();
     zipFile.on('entry', (entry) => {
-      const fileName = entry.fileName;
-      console.log('# file', fileName);
+      const targets = [
+        /\.css$/,
+        /\.ttf$/,
+        /\.woff$/,
+      ];
 
-      if (/\.ttf$/.test(fileName)) {
+      const fileName = entry.fileName;
+
+      if (targets.some((v) => v.test(fileName))) {
         const fontFileName = path.basename(fileName);
-        const buffer = entry.extraFields.data;
-        try {
-          fs.writeFileSync(`tmp/fonts/${fontFileName}`, buffer);
-        } catch (error) {
-          callback(new Error('Failed to extract files'));
-          return;
-        }
+        const destPath = `${fontsDir}${fontFileName}`;
+        extract(zipFile, entry, destPath, (err) => {
+          if (err) {
+            callback(new Error('Failed to extract files'));
+            return;
+          }
+
+          if (/\.ttf$/.test(fileName)) {
+            const minPath = `${fontsDir}min`;
+            subsetFont(destPath, minPath, 'Web', (err) => {
+              if (err) {
+                callback(new Error('Failed to extract files'));
+                return;
+              }
+
+              zipFile.readEntry();
+            });
+
+            return;
+          }
+
+          zipFile.readEntry();
+        });
+        return;
       }
 
       // next
@@ -55,3 +121,4 @@ function extractFontFiles(zipPath, callback) {
     });
   });
 }
+module.exports.extractFontKit = extractFontKit;
