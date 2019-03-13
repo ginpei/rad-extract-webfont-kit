@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
 
+const { Entry, ZipFile } = yauzl;
+
 /**
  * @param {string} dirPath
  */

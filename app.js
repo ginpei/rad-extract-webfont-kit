@@ -4,8 +4,8 @@ const multer = require('multer');
 const path = require('path');
 const misc = require('./src/misc');
 
-if (!process.version.startsWith('v4.')) {
-  console.warn('Node.js v4 is expected.'); // hope we would upgrade
+if (!process.version.startsWith('v10.')) {
+  console.warn('Node.js v10 is expected.');
 }
 
 const port = process.env.PORT || 3000;
