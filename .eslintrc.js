@@ -20,6 +20,12 @@ module.exports = {
       "error",
       "always"
     ],
+    "no-console": [
+      "error",
+      {
+        allow: ["warn", "error"]
+      },
+    ],
     "no-unused-vars": [
       "off"
     ],

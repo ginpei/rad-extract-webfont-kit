@@ -2,9 +2,13 @@
   "private": true,
   "scripts": {
     "dev": "nodemon app",
+    "lint": "eslint .",
     "start": "node app"
   },
   "dependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
     "express": "^4.16.4",
     "fontmin": "^0.9.7-beta",
     "multer": "^1.4.1",

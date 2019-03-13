@@ -1,22 +1,22 @@
 const Fontmin = require('fontmin');
 const fs = require('fs');
 const path = require('path');
-const yauzl = require("yauzl");
+const yauzl = require('yauzl');
 
 /**
  * @param {string} dirPath
  */
-function prepareDir(dirPath) {
+function prepareDir (dirPath) {
   const dirNames = dirPath.split('/').reverse();
-  var curPath = '';
+  let curPath = '';
   while (dirNames.length > 0) {
-    curPath += dirNames.pop() + '/';
+    curPath += `${dirNames.pop()}/`;
     if (!fs.existsSync(curPath)) {
       fs.mkdirSync(curPath);
     }
   }
 }
-module.exports.prepareDir = prepareDir
+module.exports.prepareDir = prepareDir;
 
 /**
  * @param {ZipFile} zipFile
@@ -24,8 +24,8 @@ module.exports.prepareDir = prepareDir
  * @param {string} destPath
  * @param {(err: Error | null) => void} callback
  */
-function extract(zipFile, entry, destPath, callback) {
-  zipFile.openReadStream(entry, function(err, readStream) {
+function extract (zipFile, entry, destPath, callback) {
+  zipFile.openReadStream(entry, (err, readStream) => {
     if (err) {
       console.error(err);
       callback(new Error('Failed to extract zipped file'));
@@ -45,7 +45,7 @@ function extract(zipFile, entry, destPath, callback) {
  * @param {string} glyph
  * @param {(err: Error | null) => void} callback
  */
-function subsetFont(filePath, destPath, glyph, callback) {
+function subsetFont (filePath, destPath, glyph, callback) {
   const fontmin = new Fontmin()
     .use(Fontmin.glyph({ text: glyph }))
     .src(filePath)
@@ -66,11 +66,11 @@ function subsetFont(filePath, destPath, glyph, callback) {
  * @param {string} fontsDir
  * @param {(err: Error | null) => void} callback
  */
-function extractFontKit(zipPath, fontsDir, callback) {
+function extractFontKit (zipPath, fontsDir, callback) {
   prepareDir(fontsDir);
 
-  yauzl.open(zipPath, { lazyEntries: true }, (err, zipFile) => {
-    if (err) {
+  yauzl.open(zipPath, { lazyEntries: true }, (openZipError, zipFile) => {
+    if (openZipError) {
       callback(new Error('Failed to open zip'));
       return;
     }
@@ -83,21 +83,21 @@ function extractFontKit(zipPath, fontsDir, callback) {
         /\.woff$/,
       ];
 
-      const fileName = entry.fileName;
+      const { fileName } = entry;
 
       if (targets.some((v) => v.test(fileName))) {
         const fontFileName = path.basename(fileName);
         const destPath = `${fontsDir}${fontFileName}`;
-        extract(zipFile, entry, destPath, (err) => {
-          if (err) {
+        extract(zipFile, entry, destPath, (extractError) => {
+          if (extractError) {
             callback(new Error('Failed to extract files'));
             return;
           }
 
           if (/\.ttf$/.test(fileName)) {
             const minPath = `${fontsDir}min`;
-            subsetFont(destPath, minPath, 'Web', (err) => {
-              if (err) {
+            subsetFont(destPath, minPath, 'Web', (subsetError) => {
+              if (subsetError) {
                 callback(new Error('Failed to extract files'));
                 return;
               }
