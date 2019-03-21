@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nodemon app",
+    "dev": "nodemon server",
     "lint": "eslint .",
-    "start": "node app"
+    "start": "node server"
   },
   "dependencies": {
     "@types/node": "^11.11.3",
