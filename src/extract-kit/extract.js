@@ -1,4 +1,3 @@
-const Fontmin = require('fontmin');
 const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
