@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const createFontsComMultiMeta = require('./createFontsComMultiMeta');
+const {
+  createFontsComMultiMeta,
+  isFontsComMulti,
+} = require('./fontsComMulti');
 
 /** @enum {string} */
 const KitType = {
@@ -9,26 +12,6 @@ const KitType = {
   fontSquirrelCom: 'fontSquirrelCom',
   unknown: 'unknown',
 };
-
-/**
- * @param {string} dir
- * @returns {Promise<boolean>}
- */
-function isFontsComMulti (dir) {
-  return new Promise((resolve, reject) => {
-    try {
-      fs.statSync(path.join(dir, 'fontlist.xml'));
-      resolve(true);
-    } catch (error) {
-      if (error.message.startsWith('ENOENT:')) {
-        resolve(false);
-        return;
-      }
-
-      reject(error);
-    }
-  });
-}
 
 /**
  * @param {string} dir

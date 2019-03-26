@@ -3,6 +3,24 @@ const parser = require('fast-xml-parser');
 const path = require('path');
 
 /**
+ * @param {string} dir
+ * @returns {Promise<boolean>}
+ */
+module.exports.isFontsComMulti = (dir) => new Promise((resolve, reject) => {
+  try {
+    fs.statSync(path.join(dir, 'fontlist.xml'));
+    resolve(true);
+  } catch (error) {
+    if (error.message.startsWith('ENOENT:')) {
+      resolve(false);
+      return;
+    }
+
+    reject(error);
+  }
+});
+
+/**
  * @param {string} srcDir
  * @returns {FontsComXmlRecord[]}
  */
@@ -84,7 +102,7 @@ function writeJson (data, destDir) {
  * @param {string} destDir
  * @returns {Promise<string>} Meta data file path.
  */
-module.exports = (srcDir, destDir) => new Promise((resolve, reject) => {
+module.exports.createFontsComMultiMeta = (srcDir, destDir) => new Promise((resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
   const font = createFont(kitFonts);
 
