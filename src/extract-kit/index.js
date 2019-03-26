@@ -14,7 +14,7 @@ function generateThumbnail (dir) {}
 module.exports = async (options, cb) => {
   const { outDir } = options;
   await extract(options.zipPath, outDir);
-  await generateMeta(outDir, outDir);
+  const filePath = await generateMeta(outDir);
   await generateThumbnail(outDir);
-  cb(null);
+  cb(null, filePath);
 };

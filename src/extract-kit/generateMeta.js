@@ -5,6 +5,11 @@ const {
   isFontsComMulti,
 } = require('./fontsComMulti');
 
+const {
+  createFontSquirrelMeta,
+  isFontSquirrel,
+} = require('./fontSquirrel');
+
 /** @enum {string} */
 const KitType = {
   fontsCom: 'fontsCom',
@@ -12,24 +17,6 @@ const KitType = {
   fontSquirrelCom: 'fontSquirrelCom',
   unknown: 'unknown',
 };
-
-/**
- * @param {string} dir
- * @returns {Promise<boolean>}
- */
-function isFontSquirrel (dir) {
-  const startText = '# Font Squirrel Font-face Generator Configuration File';
-
-  return new Promise((resolve, reject) => {
-    try {
-      const text = fs.readFileSync(path.join(dir, 'generator_config.txt'), 'utf8');
-      const result = text.startsWith(startText);
-      resolve(result);
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
 
 /**
  * Detect which type of webfont kit is the target.
@@ -50,13 +37,16 @@ async function detectKitType (dir) {
 /**
  * Generate meta data JSON file to use web fonts.
  * @param {string} srcDir
- * @param {string} destDir
  * @returns {Promise<string>}
  */
-module.exports = async (srcDir, destDir) => {
+module.exports = async (srcDir) => {
   const type = await detectKitType(srcDir);
   if (type === KitType.fontsComMulti) {
-    const metaFilePath = await createFontsComMultiMeta(srcDir, destDir);
+    const metaFilePath = await createFontsComMultiMeta(srcDir);
+    return metaFilePath;
+  }
+  if (type === KitType.fontSquirrelCom) {
+    const metaFilePath = await createFontSquirrelMeta(srcDir);
     return metaFilePath;
   }
 

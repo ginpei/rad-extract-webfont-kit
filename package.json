@@ -6,8 +6,10 @@
     "start": "node server"
   },
   "dependencies": {
+    "@types/css": "0.0.31",
     "@types/node": "^11.11.3",
     "@types/yauzl": "^2.9.1",
+    "css": "^2.2.4",
     "eslint": "^5.15.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",

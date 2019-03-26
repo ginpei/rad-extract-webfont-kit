@@ -1,24 +1,14 @@
+
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
+const { saveMeta } = require('./saveMeta');
 
 /**
  * @param {string} dir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontsComMulti = (dir) => new Promise((resolve, reject) => {
-  try {
-    fs.statSync(path.join(dir, 'fontlist.xml'));
-    resolve(true);
-  } catch (error) {
-    if (error.message.startsWith('ENOENT:')) {
-      resolve(false);
-      return;
-    }
-
-    reject(error);
-  }
-});
+module.exports.isFontsComMulti = (dir) => Promise.resolve(fs.existsSync(path.join(dir, 'fontlist.xml')));
 
 /**
  * @param {string} srcDir
@@ -85,30 +75,17 @@ function createFont (kitFonts) {
 }
 
 /**
- * @param {IFontMeta} data
- * @param {string} destDir
- * @returns {string} Path of the result file.
- */
-function writeJson (data, destDir) {
-  const json = JSON.stringify(data);
-  const dest = path.join(destDir, 'rad-font.json');
-  fs.writeFileSync(dest, json, 'utf8');
-  return dest;
-}
-
-/**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @param {string} destDir
  * @returns {Promise<string>} Meta data file path.
  */
-module.exports.createFontsComMultiMeta = (srcDir, destDir) => new Promise((resolve, reject) => {
+module.exports.createFontsComMultiMeta = (srcDir) => new Promise((resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
   const font = createFont(kitFonts);
 
   /** @type {IFontMeta} */
   const meta = { font };
-  const destFile = writeJson(meta, destDir);
+  const destFile = saveMeta(meta, srcDir);
 
   resolve(destFile);
 });
