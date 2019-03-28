@@ -66,7 +66,8 @@ function makeDeclarationMap (declarations) {
  * @returns {Font}l
  */
 function buildFontData (declarations) {
-  const fontFamily = declarations.get('font-family');
+  const fontFamily = declarations.get('font-family')
+    .slice(1, -1); // "'foo'" => 'foo'
   /** @type {Font} */
   const font = {
     displayName: fontFamily,
