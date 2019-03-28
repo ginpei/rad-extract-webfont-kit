@@ -1,13 +1,18 @@
 const extractKit = require('./src/extract-kit/index');
 
+const zipPath = process.argv[2];
+if (!zipPath) {
+  process.stdout.write('Usage: node a <zip-file>\n');
+  process.exit(1);
+}
 extractKit({
   outDir: 'tmp/kit-a',
-  zipPath: './src/extract-kit/tests/fontsquirrel.zip',
+  zipPath,
 }, (error, result) => {
   if (error) {
     console.error(error);
     return;
   }
 
-  console.log('# Done.', result);
+  process.stdout.write(`Done: ${result}\n`);
 });
