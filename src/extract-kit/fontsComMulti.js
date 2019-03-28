@@ -47,7 +47,22 @@ function readFontsComXml (srcDir) {
  * @returns {FontVariation[]}
  */
 function createVariations (kitFonts) {
-  return [];
+  /** @type {FontVariation[]} */
+  const variations = kitFonts.map((font) => {
+    const { cssFamilyName } = font;
+    const displayName = cssFamilyName.startsWith(font.familyName)
+      ? cssFamilyName.slice(font.familyName.length).trim()
+      : cssFamilyName;
+
+    /** @type {FontVariation} */
+    const variation = {
+      displayName,
+      fontFamily: font.cssFamilyName,
+      monotypeVariationId: '',
+    };
+    return variation;
+  });
+  return variations;
 }
 
 /**

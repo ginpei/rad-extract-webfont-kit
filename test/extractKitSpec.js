@@ -86,7 +86,68 @@ describe('extractKit', () => {
         },
         monotypeVariationId: '',
         // selectedVariation: undefined,
-        variations: [],
+        variations: [
+          {
+            displayName: 'Semibold',
+            fontFamily: 'Toyota Type Semibold',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Italic',
+            fontFamily: 'Toyota Type Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Book',
+            fontFamily: 'Toyota Type Book',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Bold Italic',
+            fontFamily: 'Toyota Type Bold Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Light',
+            fontFamily: 'Toyota Type Light',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Black',
+            fontFamily: 'Toyota Type Black',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Semibold Italic',
+            fontFamily: 'Toyota Type Semibold Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Black Italic',
+            fontFamily: 'Toyota Type Black Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: '',
+            fontFamily: 'Toyota Type',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Book Italic',
+            fontFamily: 'Toyota Type Book Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Light Italic',
+            fontFamily: 'Toyota Type Light Italic',
+            monotypeVariationId: '',
+          },
+          {
+            displayName: 'Bold',
+            fontFamily: 'Toyota Type Bold',
+            monotypeVariationId: '',
+          },
+        ],
       };
       expect(meta.font).to.be.eql(expected);
     });
