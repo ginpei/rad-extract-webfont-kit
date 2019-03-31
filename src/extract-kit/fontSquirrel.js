@@ -45,29 +45,34 @@ function isDeclaration (declaration) {
 }
 
 /**
- * @param {Array<import('css').Declaration | import('css').Comment>} declarations
- * @returns {Map<string, string>}
+ * @param {import('css').FontFace} fontFace
+ * @returns {string}
  */
-function makeDeclarationMap (declarations) {
-  const map = new Map();
-  declarations.forEach((declaration) => {
-    if (!isDeclaration(declaration)) {
-      return;
-    }
-
-    const { property, value } = declaration;
-    map.set(property, value);
+function getFontFamilyName (fontFace) {
+  /** @type {import('css').Declaration | null} */
+  const fontFamilyDec = fontFace.declarations.find((dec) => {
+    if (!isDeclaration(dec)) { return false; }
+    return dec.property === 'font-family';
   });
-  return map;
+  if (!fontFamilyDec) {
+    return '';
+  }
+
+  const fontFamily = fontFamilyDec.value
+    .slice(1, -1); // "'foo'" => 'foo'
+  return fontFamily;
 }
 
 /**
- * @param {Map<string, string>} declarations
- * @returns {Font}l
+ * @param {import('css').FontFace} fontFace
+ * @returns {Font}
  */
-function buildFontData (declarations) {
-  const fontFamily = declarations.get('font-family')
-    .slice(1, -1); // "'foo'" => 'foo'
+function buildFontData (fontFace) {
+  const fontFamily = getFontFamilyName(fontFace);
+  if (!fontFamily) {
+    throw new Error('Font-family must be set');
+  }
+
   /** @type {Font} */
   const font = {
     displayName: fontFamily,
@@ -95,21 +100,66 @@ function buildFontData (declarations) {
 
 /**
  * Parse `src` values of `@font-face`.
+ * Split by "," before passing text.
  * @param {string} text
  * @returns {string[]}
  * @example
  * const src = `url(\'my-font.eot?#iefix\') format(\'embedded-opentype\'),
  *   url(\'my-font.woff\') format(\'woff\')'`;
- * const urls = parseUrls(src);
- * // [ 'my-font.eot?#iefix',
- * //   'my-font.woff']
+ * const list = src.split(',');
+ * const pairs = list.map((v) => parseUrl(v));
+ * // [ ['my-font.eot', 'embedded-opentype'],
+ * //   ['my-font.woff', 'woff'] ]
  */
-function parseUrls (text) {
-  const rxUrl = /url\(('(.*?)'|"(.*?)")\)/g;
-  const matches = text
-    .match(rxUrl)
-    .map((s) => s.slice(5, -2)); // 'url("xxx")' -> 'xxx'
-  return matches;
+function parseUrl (text) {
+  const rxSrc = /url\((?:'(.*?)'|"(.*?)")\)(?: format\((?:'(.*?)'|"(.*?)")\))?/;
+  const [all, file1, file2, format1, format2] = text.match(rxSrc);
+  const file = file1 || file2;
+  const format = format1 || format2;
+  return [file, format];
+}
+
+/**
+ * @param {import('css').FontFace} fontFace
+ * @returns {{ [fileType: string]: string }}
+ */
+function buildFontFileData (fontFace) {
+  /** @type {import('css').Declaration[]} */
+  const srcDecList = fontFace.declarations.filter(
+    (dec) => isDeclaration(dec) && dec.property === 'src',
+  );
+
+  /** @type {{ [fileType: string]: string }} */
+  const map = {};
+  srcDecList.forEach((dec) => {
+    const { value } = dec;
+    const pairs = value.split(',').map((v) => parseUrl(v));
+    pairs.forEach(([file, format = 'fallback']) => {
+      const i = file.indexOf('?');
+      map[format] = i < 0 ? file : file.slice(0, i);
+    });
+  });
+
+  return map;
+}
+
+/**
+ * @param {import('css').FontFace} fontFace
+ * @returns {IKitFileInformation}
+ */
+function buildFileData (fontFace) {
+  const fontFamily = getFontFamilyName(fontFace);
+  const fontFileData = buildFontFileData(fontFace);
+
+  /** @type {IKitFileInformation} */
+  const file = {
+    css: ['stylesheet.css'],
+    fonts: {
+      [fontFamily]: fontFileData,
+    },
+    js: [],
+  };
+  return file;
 }
 
 /**
@@ -119,13 +169,17 @@ function parseUrls (text) {
  */
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = (srcDir) => {
+  // TODO check if this promise is needed to make the interface same
   return new Promise((resolve, reject) => {
+    // assume it contains only 1 font-face
     const ast = parseCssFile(srcDir);
-    const fontFaces = filterFontFace(ast.stylesheet.rules);
-    const declarations = makeDeclarationMap(fontFaces[0].declarations);
-    const font = buildFontData(declarations);
-    const urls = parseUrls(declarations.get('src'));
-    const data = { font };
+    const [fontFace] = filterFontFace(ast.stylesheet.rules);
+
+    const font = buildFontData(fontFace);
+    const files = buildFileData(fontFace);
+
+    /** @type {IFontMeta} */
+    const data = { font, files };
     const filePath = saveMeta(data, srcDir);
     resolve(filePath);
   });

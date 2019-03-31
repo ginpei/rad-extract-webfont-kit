@@ -151,6 +151,9 @@ describe('extractKit', () => {
       };
       expect(meta.font).to.be.eql(expected);
     });
+
+    it.skip('creates import files data', () => {
+    });
   });
 
   describe('with a kit from FontSquirrel.com', () => {
@@ -195,6 +198,23 @@ describe('extractKit', () => {
         ],
       };
       expect(meta.font).to.be.eql(expected);
+    });
+
+    it('creates import files data', () => {
+      /** @type {IKitFileInformation} */
+      const expected = {
+        css: ['stylesheet.css'],
+        fonts: {
+          interstatelight: {
+            'embedded-opentype': 'interstate-light-webfont.eot',
+            fallback: 'interstate-light-webfont.eot',
+            woff: 'interstate-light-webfont.woff',
+            woff2: 'interstate-light-webfont.woff2',
+          },
+        },
+        js: [],
+      };
+      expect(meta.files).to.be.eql(expected);
     });
   });
 });

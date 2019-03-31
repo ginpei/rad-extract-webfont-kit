@@ -70,6 +70,28 @@ interface FontsComXmlRecord {
   woff2: string;
 }
 
+type FontFileType =
+  | string
+  | 'embedded-opentype'
+  | 'fallback'
+  | 'woff'
+  | 'woff2';
+
+interface IFontVariationFileMap {
+  [variationName: string]: {
+    [fileType in FontFileType]: string;
+  }
+}
+
+interface IKitFileInformation {
+  css: string[];
+  fonts: IFontVariationFileMap;
+  js: string[];
+}
+
 interface IFontMeta {
   font: Font;
+  files?: IKitFileInformation;
 }
+
+type CssDeclarationMap = Map<string, string>;
