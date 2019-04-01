@@ -44,11 +44,10 @@ function readFontsComXml (srcDir) {
 }
 
 /**
- * @param {FontsComXmlRecord[]} kitFonts
  * @param {string} dir
  * @returns {Promise<IKitCode>}
  */
-async function buildCodeData (kitFonts, dir) {
+async function buildCodeData (dir) {
   const html = await readText(path.join(dir, 'demo-async.htm'));
   const licenseStartIndex = html.indexOf('<pre>/*') + 5;
   const licenseEndIndex = html.indexOf('*/</pre>') + 2;
@@ -151,7 +150,7 @@ function createFont (kitFonts) {
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
 
-  const code = await buildCodeData(kitFonts, srcDir);
+  const code = await buildCodeData(srcDir);
   const files = buildFileData(kitFonts);
   const font = createFont(kitFonts);
 
