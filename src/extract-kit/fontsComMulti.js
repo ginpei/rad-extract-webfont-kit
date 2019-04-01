@@ -3,6 +3,7 @@ const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
 const { saveMeta } = require('./saveMeta');
+const { readText } = require('../misc');
 
 /**
  * @param {string} dir
@@ -45,18 +46,18 @@ function readFontsComXml (srcDir) {
 /**
  * @param {FontsComXmlRecord[]} kitFonts
  * @param {string} dir
- * @returns {IKitCode}
+ * @returns {Promise<IKitCode>}
  */
-function buildCodeData (kitFonts, dir) {
-  const html = fs.readFileSync(path.join(dir, 'demo-async.htm'));
+async function buildCodeData (kitFonts, dir) {
+  const html = await readText(path.join(dir, 'demo-async.htm'));
   const licenseStartIndex = html.indexOf('<pre>/*') + 5;
   const licenseEndIndex = html.indexOf('*/</pre>') + 2;
   const licenseCssComment = html.slice(licenseStartIndex, licenseEndIndex);
 
-  const cssBody = fs.readFileSync(path.join(dir, 'demo-async.css'), 'utf8');
+  const cssBody = await readText(path.join(dir, 'demo-async.css'));
   const css = `${licenseCssComment}\n${cssBody}`;
 
-  const js = fs.readFileSync(path.join(dir, 'mtiFontTrackingCode.js'), 'utf8');
+  const js = await readText(path.join(dir, 'mtiFontTrackingCode.js'));
   return { css, js };
 }
 
@@ -147,10 +148,10 @@ function createFont (kitFonts) {
  * @param {string} srcDir
  * @returns {Promise<string>} Meta data file path.
  */
-module.exports.createFontsComMultiMeta = (srcDir) => new Promise((resolve, reject) => {
+module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
 
-  const code = buildCodeData(kitFonts, srcDir);
+  const code = await buildCodeData(kitFonts, srcDir);
   const files = buildFileData(kitFonts);
   const font = createFont(kitFonts);
 

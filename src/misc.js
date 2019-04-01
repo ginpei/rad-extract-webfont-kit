@@ -124,3 +124,21 @@ function extractFontKit (zipPath, fontsDir, callback) {
   });
 }
 module.exports.extractFontKit = extractFontKit;
+
+/**
+ * @param {string} filePath
+ * @returns {Promise<string>}
+ */
+async function readText (filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, text) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(text);
+    });
+  });
+}
+module.exports.readText = readText;
