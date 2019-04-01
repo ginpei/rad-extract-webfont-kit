@@ -89,9 +89,15 @@ interface IKitFileInformation {
   js: string[];
 }
 
+interface IKitCode {
+  css: string;
+  js: string;
+}
+
 interface IFontMeta {
   font: Font;
   files: IKitFileInformation;
+  code?: IKitCode;
 }
 
 type CssDeclarationMap = Map<string, string>;

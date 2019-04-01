@@ -258,6 +258,24 @@ describe('extractKit', () => {
       };
       expect(meta.files).to.be.eql(expected);
     });
+
+    it('embeds license to CSS code', () => {
+      const { css } = meta.code;
+      const lines = css.split('\n');
+      expect(lines[0].trim()).to.be.eq('/*');
+      expect(lines[1].trim().slice(0, 16)).to.be.eq('This CSS resourc');
+    });
+
+    it('creates embed CSS code from file', () => {
+      const { css } = meta.code;
+      const lines = css.split('\n');
+      expect(lines[6].trim().slice(0, 16)).to.be.eq('@font-face{');
+    });
+
+    it('creates embed JS code', () => {
+      const { js } = meta.code;
+      expect(js.slice(0, 15)).to.be.eq('eval(function(p');
+    });
   });
 
   describe('with a kit from FontSquirrel.com', () => {

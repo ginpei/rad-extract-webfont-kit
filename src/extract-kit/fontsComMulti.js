@@ -44,6 +44,24 @@ function readFontsComXml (srcDir) {
 
 /**
  * @param {FontsComXmlRecord[]} kitFonts
+ * @param {string} dir
+ * @returns {IKitCode}
+ */
+function buildCodeData (kitFonts, dir) {
+  const html = fs.readFileSync(path.join(dir, 'demo-async.htm'));
+  const licenseStartIndex = html.indexOf('<pre>/*') + 5;
+  const licenseEndIndex = html.indexOf('*/</pre>') + 2;
+  const licenseCssComment = html.slice(licenseStartIndex, licenseEndIndex);
+
+  const cssBody = fs.readFileSync(path.join(dir, 'demo-async.css'), 'utf8');
+  const css = `${licenseCssComment}\n${cssBody}`;
+
+  const js = fs.readFileSync(path.join(dir, 'mtiFontTrackingCode.js'), 'utf8');
+  return { css, js };
+}
+
+/**
+ * @param {FontsComXmlRecord[]} kitFonts
  */
 function buildFontsData (kitFonts) {
   /** @type {IFontVariationFileMap} */
@@ -132,11 +150,12 @@ function createFont (kitFonts) {
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise((resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
 
+  const code = buildCodeData(kitFonts, srcDir);
   const files = buildFileData(kitFonts);
   const font = createFont(kitFonts);
 
   /** @type {IFontMeta} */
-  const data = { files, font };
+  const data = { code, files, font };
   const destFile = saveMeta(data, srcDir);
 
   resolve(destFile);
