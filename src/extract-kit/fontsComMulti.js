@@ -44,6 +44,41 @@ function readFontsComXml (srcDir) {
 
 /**
  * @param {FontsComXmlRecord[]} kitFonts
+ */
+function buildFontsData (kitFonts) {
+  /** @type {IFontVariationFileMap} */
+  const fonts = {
+    [kitFonts[0].cssFamilyName]: {},
+  };
+  kitFonts.forEach((font) => {
+    fonts[font.cssFamilyName] = {
+      eot: font.eot,
+      fallback: font.eot,
+      svg: font.svg,
+      ttf: font.ttf,
+      woff: font.woff,
+      woff2: font.woff2,
+    };
+  });
+  return fonts;
+}
+
+/**
+ * @param {FontsComXmlRecord[]} kitFonts
+ * @returns {IKitFileInformation}
+ */
+function buildFileData (kitFonts) {
+  /** @type {IKitFileInformation} */
+  const files = {
+    css: ['demo-async.css'],
+    fonts: buildFontsData(kitFonts),
+    js: ['mtiFontTrackingCode.js'],
+  };
+  return files;
+}
+
+/**
+ * @param {FontsComXmlRecord[]} kitFonts
  * @returns {FontVariation[]}
  */
 function createVariations (kitFonts) {
@@ -96,11 +131,13 @@ function createFont (kitFonts) {
  */
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise((resolve, reject) => {
   const kitFonts = readFontsComXml(srcDir);
+
+  const files = buildFileData(kitFonts);
   const font = createFont(kitFonts);
 
   /** @type {IFontMeta} */
-  const meta = { font };
-  const destFile = saveMeta(meta, srcDir);
+  const data = { files, font };
+  const destFile = saveMeta(data, srcDir);
 
   resolve(destFile);
 });

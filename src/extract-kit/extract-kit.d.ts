@@ -91,7 +91,7 @@ interface IKitFileInformation {
 
 interface IFontMeta {
   font: Font;
-  files?: IKitFileInformation;
+  files: IKitFileInformation;
 }
 
 type CssDeclarationMap = Map<string, string>;
