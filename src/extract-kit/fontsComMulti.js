@@ -51,7 +51,7 @@ function createVariations (kitFonts) {
   const variations = kitFonts.map((font) => {
     const { cssFamilyName } = font;
     const displayName = cssFamilyName.startsWith(font.familyName)
-      ? (cssFamilyName.slice(font.familyName.length).trim() || 'Medium')
+      ? (cssFamilyName.slice(font.familyName.length).trim() || 'Regular')
       : cssFamilyName;
 
     /** @type {FontVariation} */

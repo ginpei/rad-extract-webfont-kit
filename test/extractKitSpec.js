@@ -128,7 +128,7 @@ describe('extractKit', () => {
             monotypeVariationId: '',
           },
           {
-            displayName: 'Medium',
+            displayName: 'Regular',
             fontFamily: 'Toyota Type',
             monotypeVariationId: '',
           },
