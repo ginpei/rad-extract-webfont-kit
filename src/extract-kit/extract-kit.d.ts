@@ -97,7 +97,7 @@ interface IKitCode {
 interface IFontMeta {
   font: Font;
   files: IKitFileInformation;
-  code?: IKitCode;
+  code: IKitCode;
 }
 
 type CssDeclarationMap = Map<string, string>;

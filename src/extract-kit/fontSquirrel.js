@@ -1,7 +1,8 @@
-const css = require('css');
+const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
 const { saveMeta } = require('./saveMeta');
+const { readText } = require('../misc');
 
 /**
  * @param {string} srcDir
@@ -24,7 +25,7 @@ module.exports.isFontSquirrel = (srcDir) => {
 function parseCssFile (srcDir) {
   const filePath = path.join(srcDir, 'stylesheet.css');
   const cssText = fs.readFileSync(filePath, 'utf8');
-  const ast = css.parse(cssText);
+  const ast = cssParser.parse(cssText);
   return ast;
 }
 
@@ -34,6 +35,16 @@ function parseCssFile (srcDir) {
  */
 function filterFontFace (rules) {
   return rules.filter((rule) => rule.type === 'font-face');
+}
+
+/**
+ * @param {string} dir
+ * @returns {Promise<IKitCode>}
+ */
+async function buildCodeData (dir) {
+  const css = await readText(path.join(dir, 'stylesheet.css'));
+  const js = '';
+  return { css, js };
 }
 
 /**
@@ -170,16 +181,17 @@ function buildFileData (fontFace) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = (srcDir) => {
   // TODO check if this promise is needed to make the interface same
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     // assume it contains only 1 font-face
     const ast = parseCssFile(srcDir);
     const [fontFace] = filterFontFace(ast.stylesheet.rules);
 
+    const code = await buildCodeData(srcDir);
     const font = buildFontData(fontFace);
     const files = buildFileData(fontFace);
 
     /** @type {IFontMeta} */
-    const data = { font, files };
+    const data = { code, font, files };
     const filePath = saveMeta(data, srcDir);
     resolve(filePath);
   });
