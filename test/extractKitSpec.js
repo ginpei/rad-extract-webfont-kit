@@ -302,7 +302,7 @@ describe('extractKit', () => {
     it('creates font data', () => {
       /** @type {Font} */
       const expected = {
-        displayName: 'interstatelight',
+        displayName: 'Interstate-Light Regular',
         fontFamily: 'interstatelight',
         fontProvider: 'fontsquirrel.com',
         fontProviderWebSite: 'fontsquirrel.com',
@@ -316,7 +316,7 @@ describe('extractKit', () => {
         // selectedVariation: undefined,
         variations: [
           {
-            displayName: 'interstatelight',
+            displayName: 'Interstate-Light Regular',
             fontFamily: 'interstatelight',
             monotypeVariationId: '',
           },
@@ -351,5 +351,7 @@ describe('extractKit', () => {
       const { js } = meta.code;
       expect(js).to.be.eq('');
     });
+
+    it('throws if HTML file lacks');
   });
 });

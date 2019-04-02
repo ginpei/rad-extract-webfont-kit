@@ -2,7 +2,7 @@ const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
 const { saveMeta } = require('./saveMeta');
-const { readText } = require('../misc');
+const { findFilesWithExtension, readText } = require('../misc');
 
 /**
  * @param {string} srcDir
@@ -75,18 +75,41 @@ function getFontFamilyName (fontFace) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
- * @returns {Font}
+ * @param {string} dir
+ * @returns {Promise<string>}
  */
-function buildFontData (fontFace) {
+async function getDisplayName (dir) {
+  const startTag = '<div id="header">';
+  const endTag = '</div>';
+
+  // assume there is only 1 HTML file
+  const [htmlPath] = await findFilesWithExtension(dir, '.html');
+  const html = await readText(path.join(dir, htmlPath));
+
+  const startsAt = html.indexOf(startTag) + startTag.length;
+  const endsAt = html.indexOf(endTag, startsAt);
+  const content = html.slice(startsAt, endsAt);
+
+  const displayName = content.trim();
+  return displayName;
+}
+
+/**
+ * @param {import('css').FontFace} fontFace
+ * @param {string} dir
+ * @returns {Promise<Font>}
+ */
+async function buildFontData (fontFace, dir) {
   const fontFamily = getFontFamilyName(fontFace);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
 
+  const displayName = await getDisplayName(dir);
+
   /** @type {Font} */
   const font = {
-    displayName: fontFamily,
+    displayName,
     fontFamily,
     fontProvider: 'fontsquirrel.com',
     fontProviderWebSite: 'fontsquirrel.com',
@@ -100,7 +123,7 @@ function buildFontData (fontFace) {
     selectedVariation: undefined,
     variations: [
       {
-        displayName: fontFamily,
+        displayName,
         fontFamily,
         monotypeVariationId: '', // TODO remove
       },
@@ -179,7 +202,7 @@ function buildFileData (fontFace) {
  * @returns {Promise<string>} Meta data file path.
  */
 // eslint-disable-next-line arrow-body-style
-module.exports.createFontSquirrelMeta = (srcDir) => {
+module.exports.createFontSquirrelMeta = async (srcDir) => {
   // TODO check if this promise is needed to make the interface same
   return new Promise(async (resolve, reject) => {
     // assume it contains only 1 font-face
@@ -187,7 +210,7 @@ module.exports.createFontSquirrelMeta = (srcDir) => {
     const [fontFace] = filterFontFace(ast.stylesheet.rules);
 
     const code = await buildCodeData(srcDir);
-    const font = buildFontData(fontFace);
+    const font = await buildFontData(fontFace, srcDir);
     const files = buildFileData(fontFace);
 
     /** @type {IFontMeta} */

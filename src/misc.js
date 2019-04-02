@@ -142,3 +142,23 @@ function readText (filePath) {
   });
 }
 module.exports.readText = readText;
+
+/**
+ * @param {import("fs").PathLike} dir
+ * @param {string} extension
+ * @returns {Promise<string[]>}
+ */
+function findFilesWithExtension (dir, extension) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, 'utf8', (err, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const targets = files.filter((v) => path.extname(v) === extension);
+      resolve(targets);
+    });
+  });
+}
+module.exports.findFilesWithExtension = findFilesWithExtension;
