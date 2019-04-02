@@ -2,7 +2,7 @@ const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
 const { saveMeta } = require('./saveMeta');
-const { findFilesWithExtension, readText } = require('../misc');
+const misc = require('../misc');
 
 /**
  * @param {string} srcDir
@@ -42,7 +42,7 @@ function filterFontFace (rules) {
  * @returns {Promise<IKitCode>}
  */
 async function buildCodeData (dir) {
-  const css = await readText(path.join(dir, 'stylesheet.css'));
+  const css = await misc.readText(path.join(dir, 'stylesheet.css'));
   const js = '';
   return { css, js };
 }
@@ -83,8 +83,11 @@ async function getDisplayName (dir) {
   const endTag = '</div>';
 
   // assume there is only 1 HTML file
-  const [htmlPath] = await findFilesWithExtension(dir, '.html');
-  const html = await readText(path.join(dir, htmlPath));
+  const [htmlPath] = await misc.findFilesWithExtension(dir, '.html');
+  if (!htmlPath) {
+    throw new Error('Kit must contains an HTML file to parse');
+  }
+  const html = await misc.readText(path.join(dir, htmlPath));
 
   const startsAt = html.indexOf(startTag) + startTag.length;
   const endsAt = html.indexOf(endTag, startsAt);
