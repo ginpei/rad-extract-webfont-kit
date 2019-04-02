@@ -28,8 +28,11 @@ describe('extractKit', () => {
           zipPath: path.join(__dirname, `./assets/${fileName}`),
         };
         extractKit(options, (error, result) => {
-          const json = fs.readFileSync(path.join(tmpDir, 'rad-font.json'), 'utf8');
-          const meta = JSON.parse(json);
+          let meta;
+          if (!error) {
+            const json = fs.readFileSync(path.join(tmpDir, 'rad-font.json'), 'utf8');
+            meta = JSON.parse(json);
+          }
           resolve({
             error,
             meta,

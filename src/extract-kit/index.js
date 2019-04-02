@@ -12,9 +12,13 @@ function generateThumbnail (dir) {}
  * @param {(error: Error | null, result?: IExtractKitResult) => void} cb
  */
 module.exports = async (options, cb) => {
-  const { outDir } = options;
-  await extract(options.zipPath, outDir);
-  const filePath = await generateMeta(outDir);
-  await generateThumbnail(outDir);
-  cb(null, filePath);
+  try {
+    const { outDir } = options;
+    await extract(options.zipPath, outDir);
+    const filePath = await generateMeta(outDir);
+    await generateThumbnail(outDir);
+    cb(null, filePath);
+  } catch (error) {
+    cb(error);
+  }
 };
