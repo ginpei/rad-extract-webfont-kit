@@ -203,19 +203,16 @@ function buildFileData (fontFace) {
  */
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = async (srcDir) => {
-  // TODO check if this promise is needed to make the interface same
-  return new Promise(async (resolve, reject) => {
-    // assume it contains only 1 font-face
-    const ast = parseCssFile(srcDir);
-    const [fontFace] = filterFontFace(ast.stylesheet.rules);
+  // assume it contains only 1 font-face
+  const ast = parseCssFile(srcDir);
+  const [fontFace] = filterFontFace(ast.stylesheet.rules);
 
-    const code = await buildCodeData(srcDir);
-    const font = await buildFontData(fontFace, srcDir);
-    const files = buildFileData(fontFace);
+  const code = await buildCodeData(srcDir);
+  const font = await buildFontData(fontFace, srcDir);
+  const files = buildFileData(fontFace);
 
-    /** @type {IFontMeta} */
-    const data = { code, font, files };
-    const filePath = saveMeta(data, srcDir);
-    resolve(filePath);
-  });
+  /** @type {IFontMeta} */
+  const data = { code, font, files };
+  const filePath = saveMeta(data, srcDir);
+  return filePath;
 };
