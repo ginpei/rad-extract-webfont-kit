@@ -4,7 +4,8 @@
     "dev": "nodemon server",
     "lint": "eslint .",
     "start": "node server",
-    "test": "mocha"
+    "test": "mocha",
+    "type-check": "tsc"
   },
   "dependencies": {
     "@types/css": "0.0.31",
