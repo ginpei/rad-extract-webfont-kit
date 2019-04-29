@@ -50,8 +50,12 @@ function read (zipFile, onEntry) {
       'entry',
       /** @type {(entry: Entry) => Promise<void>} */
       async (entry) => {
+        try {
         await onEntry(entry);
         zipFile.readEntry();
+        } catch (error) {
+          reject(error);
+        }
       },
     );
 
@@ -155,6 +159,11 @@ module.exports = async (src, dest) => {
   /** @type {string[]} */
   const filePaths = [];
   await read(zipFile, (entry) => {
+    // skip directories
+    if (entry.fileName.slice(-1) === '/') {
+      return Promise.resolve();
+    }
+
     filePaths.push(entry.fileName);
     return extractEntry(zipFile, entry, dest);
   });
