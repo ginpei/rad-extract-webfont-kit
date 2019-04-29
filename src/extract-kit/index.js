@@ -13,7 +13,9 @@ if (!global.extractWebfontKit) {
  * Generate thumbnail image of the font.
  * @param {string} dir
  */
-function generateThumbnail (dir) {}
+function generateThumbnail (dir) {
+  // TODO
+}
 
 /**
  * @param {IExtractKitOptions} options

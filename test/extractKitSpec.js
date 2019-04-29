@@ -48,14 +48,21 @@ describe('extractKit', () => {
   /** @type {Error} */
   let error;
 
+  /** @type {IFontMeta} */
+  let meta;
+
   /** @type {IExtractKitResult} */
   let result;
 
   /** @type {string} */
-  let tmpDir = '/dev/null';
+  let tmpDir;
 
-  /** @type {IFontMeta} */
-  let meta;
+  before(() => {
+    error = null;
+    meta = null;
+    result = null;
+    tmpDir = '/dev/null';
+  });
 
   describe('with a kit from Fonts.com including multi fonts', () => {
     before(async () => {
