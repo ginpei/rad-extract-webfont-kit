@@ -357,10 +357,10 @@ describe('extractKit', () => {
 
     describe('without HTML file', () => {
       /** @type {sinon.SinonStub} */
-      let findFilesWithExtension;
+      let findFilesByExtension;
 
       before(async () => {
-        findFilesWithExtension = sinon.stub(misc, 'findFilesWithExtension')
+        findFilesByExtension = sinon.stub(misc, 'findFilesByExtension')
           .returns(Promise.resolve([]));
 
         ({
@@ -372,7 +372,7 @@ describe('extractKit', () => {
       });
 
       after(() => {
-        findFilesWithExtension.restore();
+        findFilesByExtension.restore();
       });
 
       it('throws with message', () => {

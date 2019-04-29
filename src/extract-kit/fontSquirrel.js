@@ -83,7 +83,7 @@ async function getDisplayName (dir) {
   const endTag = '</div>';
 
   // assume there is only 1 HTML file
-  const [htmlPath] = await misc.findFilesWithExtension(dir, '.html');
+  const [htmlPath] = await misc.findFilesByExtension(dir, '.html');
   if (!htmlPath) {
     throw new Error('Kit must contains an HTML file to parse');
   }

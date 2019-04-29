@@ -148,7 +148,7 @@ module.exports.readText = readText;
  * @param {string} extension
  * @returns {Promise<string[]>}
  */
-function findFilesWithExtension (dir, extension) {
+function findFilesByExtension (dir, extension) {
   return new Promise((resolve, reject) => {
     fs.readdir(dir, 'utf8', (err, files) => {
       if (err) {
@@ -161,7 +161,7 @@ function findFilesWithExtension (dir, extension) {
     });
   });
 }
-module.exports.findFilesWithExtension = findFilesWithExtension;
+module.exports.findFilesByExtension = findFilesByExtension;
 
 /**
  * @param {any[]} args
