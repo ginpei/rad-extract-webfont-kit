@@ -1,11 +1,11 @@
-const extractKit = require('./src/extract-kit/index');
+const extractWebfontKit = require('./src/extract-kit/index');
 
 const zipPath = process.argv[2];
 if (!zipPath) {
   process.stdout.write('Usage: node a <zip-file>\n');
   process.exit(1);
 }
-extractKit({
+extractWebfontKit({
   outDir: 'tmp/kit-a',
   zipPath,
 }, (error, result) => {
