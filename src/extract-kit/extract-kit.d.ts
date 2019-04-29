@@ -1,8 +1,22 @@
+declare module NodeJS  {
+  interface Global {
+    extractWebfontKit: {
+      verbose: boolean;
+      verboseLog: (...args: any[]) => void;
+    }
+  }
+}
+
 interface IExtractKitOptions {
   /**
    * Output directory where whole files are extracted directly.
    */
   outDir?: string;
+
+  /**
+   * If show all logs.
+   */
+  verbose?: boolean;
 
   /**
    * Input file.

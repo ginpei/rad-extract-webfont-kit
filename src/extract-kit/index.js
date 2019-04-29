@@ -1,5 +1,13 @@
+const { verboseLog } = require('../misc');
 const extract = require('./extract');
 const generateMeta = require('./generateMeta');
+
+if (!global.extractWebfontKit) {
+  global.extractWebfontKit = {
+    verbose: false,
+    verboseLog,
+  };
+}
 
 /**
  * Generate thumbnail image of the font.
@@ -12,6 +20,10 @@ function generateThumbnail (dir) {}
  * @param {(error: Error | null, result?: IExtractKitResult) => void} cb
  */
 module.exports = async (options, cb) => {
+  if (options.verbose) {
+    global.extractWebfontKit.verbose = true;
+  }
+
   try {
     const { outDir } = options;
     await extract(options.zipPath, outDir);

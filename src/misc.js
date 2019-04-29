@@ -162,3 +162,17 @@ function findFilesWithExtension (dir, extension) {
   });
 }
 module.exports.findFilesWithExtension = findFilesWithExtension;
+
+/**
+ * @param {any[]} args
+ */
+function verboseLog (...args) {
+  // @ts-ignore
+  if (!global.extractWebfontKit.verbose) {
+    return;
+  }
+
+  // eslint-disable-next-line no-console
+  console.log('[extractWebfontKit]', ...args);
+}
+module.exports.verboseLog = verboseLog;

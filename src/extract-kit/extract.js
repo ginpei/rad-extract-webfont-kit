@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
+const { verboseLog } = require('../misc');
 
 const { Entry, ZipFile } = yauzl;
 
@@ -51,8 +52,8 @@ function read (zipFile, onEntry) {
       /** @type {(entry: Entry) => Promise<void>} */
       async (entry) => {
         try {
-        await onEntry(entry);
-        zipFile.readEntry();
+          await onEntry(entry);
+          zipFile.readEntry();
         } catch (error) {
           reject(error);
         }
@@ -164,6 +165,7 @@ module.exports = async (src, dest) => {
       return Promise.resolve();
     }
 
+    verboseLog('extract...', entry.fileName);
     filePaths.push(entry.fileName);
     return extractEntry(zipFile, entry, dest);
   });

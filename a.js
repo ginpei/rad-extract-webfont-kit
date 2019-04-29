@@ -7,10 +7,11 @@ if (!zipPath) {
 }
 extractWebfontKit({
   outDir: 'tmp/kit-a',
+  verbose: true,
   zipPath,
 }, (error, result) => {
   if (error) {
-    console.error(error);
+    console.error('Failed!', error);
     return;
   }
 
