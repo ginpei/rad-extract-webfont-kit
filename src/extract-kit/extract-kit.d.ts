@@ -97,12 +97,6 @@ interface IFontVariationFileMap {
   }
 }
 
-interface IKitFileInformation {
-  css: string[];
-  fonts: IFontVariationFileMap;
-  js: string[];
-}
-
 interface IKitCode {
   css: string;
   js: string;
@@ -110,8 +104,6 @@ interface IKitCode {
 
 interface IFontMeta {
   font: Font;
-  files: IKitFileInformation;
+  files: string[];
   code: IKitCode;
 }
-
-type CssDeclarationMap = Map<string, string>;

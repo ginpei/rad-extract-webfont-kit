@@ -62,37 +62,36 @@ async function buildCodeData (dir) {
 
 /**
  * @param {FontsComXmlRecord[]} kitFonts
+ * @returns {string[]}
  */
 function buildFontsData (kitFonts) {
-  /** @type {IFontVariationFileMap} */
-  const fonts = {
-    [kitFonts[0].cssFamilyName]: {},
-  };
-  kitFonts.forEach((font) => {
-    fonts[font.cssFamilyName] = {
-      eot: font.eot,
-      fallback: font.eot,
-      svg: font.svg,
-      ttf: font.ttf,
-      woff: font.woff,
-      woff2: font.woff2,
-    };
-  });
-  return fonts;
+  const pathList = kitFonts
+    .map((font) => [
+      font.eot,
+      font.eot,
+      font.svg,
+      font.ttf,
+      font.woff,
+      font.woff2,
+    ])
+    .reduce((all, partial) => [
+      ...all,
+      ...partial,
+    ], []);
+  return pathList;
 }
 
 /**
  * @param {FontsComXmlRecord[]} kitFonts
- * @returns {IKitFileInformation}
+ * @returns {string[]}
  */
 function buildFileData (kitFonts) {
-  /** @type {IKitFileInformation} */
-  const files = {
-    css: ['demo-async.css'],
-    fonts: buildFontsData(kitFonts),
-    js: ['mtiFontTrackingCode.js'],
-  };
-  return files;
+  const pathList = [
+    'demo-async.css',
+    'mtiFontTrackingCode.js',
+    ...buildFontsData(kitFonts),
+  ];
+  return pathList;
 }
 
 /**
