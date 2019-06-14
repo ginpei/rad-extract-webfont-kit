@@ -158,45 +158,43 @@ function parseUrl (text) {
 
 /**
  * @param {import('css').FontFace} fontFace
- * @returns {{ [fileType: string]: string }}
+ * @returns {string[]}
  */
-function buildFontFileData (fontFace) {
+function buildFontsData (fontFace) {
   /** @type {import('css').Declaration[]} */
   const srcDecList = fontFace.declarations.filter(
     (dec) => isDeclaration(dec) && dec.property === 'src',
   );
 
-  /** @type {{ [fileType: string]: string }} */
-  const map = {};
+  // rewrite these with flat() when migrated Node.js v12
+  /** @type {string[]} */
+  const paths = [];
   srcDecList.forEach((dec) => {
-    const { value } = dec;
-    const pairs = value.split(',').map((v) => parseUrl(v));
-    pairs.forEach(([file, format = 'fallback']) => {
-      const i = file.indexOf('?');
-      map[format] = i < 0 ? file : file.slice(0, i);
-    });
+    dec.value.split(',')
+      .map((v) => parseUrl(v)) // [[filePath, format], ...]
+      .forEach(([file]) => {
+        // remove query from like "my-font.eot?#iefix"
+        const i = file.indexOf('?');
+        const p = i < 0 ? file : file.slice(0, i);
+
+        paths.push(p);
+      });
   });
 
-  return map;
+  return paths;
 }
 
 /**
  * @param {import('css').FontFace} fontFace
- * @returns {IKitFileInformation}
+ * @returns {string[]}
  */
 function buildFileData (fontFace) {
-  const fontFamily = getFontFamilyName(fontFace);
-  const fontFileData = buildFontFileData(fontFace);
-
-  /** @type {IKitFileInformation} */
-  const file = {
-    css: ['stylesheet.css'],
-    fonts: {
-      [fontFamily]: fontFileData,
-    },
-    js: [],
-  };
-  return file;
+  const pathList = [
+    'stylesheet.css',
+    'mtiFontTrackingCode.js',
+    ...buildFontsData(fontFace),
+  ];
+  return pathList;
 }
 
 /**

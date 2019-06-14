@@ -237,19 +237,14 @@ describe('extractKit', () => {
       });
 
       it('creates import files data', () => {
-        /** @type {IKitFileInformation} */
-        const expected = {
-          css: ['stylesheet.css'],
-          fonts: {
-            interstatelight: {
-              'embedded-opentype': 'interstate-light-webfont.eot',
-              fallback: 'interstate-light-webfont.eot',
-              woff: 'interstate-light-webfont.woff',
-              woff2: 'interstate-light-webfont.woff2',
-            },
-          },
-          js: [],
-        };
+        const expected = [
+          'stylesheet.css',
+          'mtiFontTrackingCode.js',
+          'interstate-light-webfont.eot',
+          'interstate-light-webfont.eot',
+          'interstate-light-webfont.woff2',
+          'interstate-light-webfont.woff',
+        ];
         expect(meta.files).to.be.eql(expected);
       });
 
