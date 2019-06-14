@@ -239,7 +239,6 @@ describe('extractKit', () => {
       it('creates import files data', () => {
         const expected = [
           'stylesheet.css',
-          'mtiFontTrackingCode.js',
           'interstate-light-webfont.eot',
           'interstate-light-webfont.eot',
           'interstate-light-webfont.woff2',

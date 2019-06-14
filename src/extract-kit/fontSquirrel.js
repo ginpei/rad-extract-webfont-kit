@@ -191,7 +191,6 @@ function buildFontsData (fontFace) {
 function buildFileData (fontFace) {
   const pathList = [
     'stylesheet.css',
-    'mtiFontTrackingCode.js',
     ...buildFontsData(fontFace),
   ];
   return pathList;
