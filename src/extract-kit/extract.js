@@ -94,62 +94,6 @@ function extractEntry (zipFile, entry, dest) {
 }
 
 /**
- * @param {ZipFile} zipFile
- * @param {Entry} entry
- * @param {string} destPath
- * @param {(err: Error | null) => void} callback
- */
-function extract0 (zipFile, entry, destPath, callback) {
-  zipFile.openReadStream(entry, (err, readStream) => {
-    if (err) {
-      console.error(err);
-      callback(new Error('Failed to extract zipped file'));
-      return;
-    }
-
-    readStream.on('end', () => callback(null));
-
-    const writeStream = fs.createWriteStream(destPath);
-    readStream.pipe(writeStream);
-  });
-}
-
-/**
- * @param {string} zipPath
- * @param {string} fontsDir
- * @param {(err: Error | null) => void} callback
- */
-function extractFontKit (zipPath, fontsDir, callback) {
-  prepareDir(fontsDir);
-
-  yauzl.open(zipPath, { lazyEntries: true }, (openZipError, zipFile) => {
-    if (openZipError) {
-      callback(new Error('Failed to open zip'));
-      return;
-    }
-
-    zipFile.readEntry();
-    zipFile.on('entry', (entry) => {
-      const { fileName } = entry;
-      const fontFileName = path.basename(fileName);
-      const destPath = `${fontsDir}${fontFileName}`;
-      extract0(zipFile, entry, destPath, (extractError) => {
-        if (extractError) {
-          callback(new Error('Failed to extract files'));
-          return;
-        }
-
-        zipFile.readEntry();
-      });
-    });
-
-    zipFile.on('end', () => {
-      callback(null);
-    });
-  });
-}
-
-/**
  * Simply extract zip file.
  * @param {string} src
  * @param {string} dest
