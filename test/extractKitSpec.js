@@ -176,7 +176,7 @@ describe('extractKit', () => {
       const { css } = meta.code;
       const lines = css.split('\n');
       expect(lines[0].trim()).to.be.eq('/*');
-      expect(lines[1].trim().slice(0, 16)).to.be.eq('This CSS resourc');
+      expect(lines[1].trim().slice(0, 17)).to.be.eq('This CSS resource');
     });
 
     it('creates embed CSS code from file', () => {
