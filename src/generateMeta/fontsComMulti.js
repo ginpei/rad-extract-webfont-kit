@@ -2,7 +2,7 @@
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
-const { saveMeta } = require('./saveMeta');
+const { saveMeta } = require('../saveMeta');
 const { readText } = require('../misc');
 
 /**

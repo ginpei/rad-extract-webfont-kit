@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const sinon = require('sinon');
 const tmp = require('tmp');
-const extractKit = require('../src/extract-kit');
+const extractKit = require('../src');
 const misc = require('../src/misc');
 
 describe('extractKit', () => {

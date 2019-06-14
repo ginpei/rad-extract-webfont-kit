@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
-const { verboseLog } = require('../misc');
+const { verboseLog } = require('./misc');
 
 /**
  * @param {string} dirPath

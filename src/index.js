@@ -1,4 +1,4 @@
-const { verboseLog } = require('../misc');
+const { verboseLog } = require('./misc');
 const extract = require('./extract');
 const generateMeta = require('./generateMeta');
 

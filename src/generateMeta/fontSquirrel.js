@@ -1,7 +1,7 @@
 const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
-const { saveMeta } = require('./saveMeta');
+const { saveMeta } = require('../saveMeta');
 const misc = require('../misc');
 
 /**

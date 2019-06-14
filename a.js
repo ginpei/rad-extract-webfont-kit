@@ -1,4 +1,4 @@
-const extractWebfontKit = require('./src/extract-kit/index');
+const extractWebfontKit = require('./src/index');
 
 const zipPath = process.argv[2];
 if (!zipPath) {
