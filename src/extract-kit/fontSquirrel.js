@@ -150,7 +150,7 @@ async function buildFontData (fontFace, dir) {
  */
 function parseUrl (text) {
   const rxSrc = /url\((?:'(.*?)'|"(.*?)")\)(?: format\((?:'(.*?)'|"(.*?)")\))?/;
-  const [all, file1, file2, format1, format2] = text.match(rxSrc);
+  const [, file1, file2, format1, format2] = text.match(rxSrc);
   const file = file1 || file2;
   const format = format1 || format2;
   return [file, format];

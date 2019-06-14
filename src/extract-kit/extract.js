@@ -3,8 +3,6 @@ const path = require('path');
 const yauzl = require('yauzl');
 const { verboseLog } = require('../misc');
 
-const { Entry, ZipFile } = yauzl;
-
 /**
  * @param {string} dirPath
  */
@@ -23,7 +21,7 @@ module.exports.prepareDir = prepareDir;
 
 /**
  * @param {string} zipPath
- * @returns {Promise<ZipFile>}
+ * @returns {Promise<yauzl.ZipFile>}
  */
 function open (zipPath) {
   return new Promise((resolve, reject) => {
@@ -39,8 +37,8 @@ function open (zipPath) {
 }
 
 /**
- * @param {ZipFile} zipFile
- * @param {(entry: Entry) => Promise<void>} onEntry
+ * @param {yauzl.ZipFile} zipFile
+ * @param {(entry: yauzl.Entry) => Promise<void>} onEntry
  * @returns {Promise<void>}
  */
 function read (zipFile, onEntry) {
@@ -49,7 +47,7 @@ function read (zipFile, onEntry) {
     zipFile.on('error', (error) => reject(error)); // TODO check if correct
     zipFile.on(
       'entry',
-      /** @type {(entry: Entry) => Promise<void>} */
+      /** @type {(entry: yauzl.Entry) => Promise<void>} */
       async (entry) => {
         try {
           await onEntry(entry);
@@ -67,8 +65,8 @@ function read (zipFile, onEntry) {
 }
 
 /**
- * @param {ZipFile} zipFile
- * @param {Entry} entry
+ * @param {yauzl.ZipFile} zipFile
+ * @param {yauzl.Entry} entry
  * @param {string} dest
  * @returns {Promise<void>}
  */

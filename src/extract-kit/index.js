@@ -13,6 +13,7 @@ if (!global.extractWebfontKit) {
  * Generate thumbnail image of the font.
  * @param {string} dir
  */
+// eslint-disable-next-line no-unused-vars
 function generateThumbnail (dir) {
   // TODO
 }

@@ -146,7 +146,7 @@ function createFont (kitFonts) {
  * @param {string} srcDir
  * @returns {Promise<string>} Meta data file path.
  */
-module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve, reject) => {
+module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
 
   const code = await buildCodeData(srcDir);
