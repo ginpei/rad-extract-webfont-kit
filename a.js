@@ -6,7 +6,7 @@ if (!zipPath) {
   process.exit(1);
 }
 extractWebfontKit({
-  outDir: 'tmp/kit-a',
+  outDir: `tmp/${Date.now()}`,
   verbose: true,
   zipPath,
 }, (error, result) => {
