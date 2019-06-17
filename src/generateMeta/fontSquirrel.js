@@ -1,7 +1,6 @@
 const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
-const { saveMeta } = require('../saveMeta');
 const misc = require('../misc');
 
 /**
@@ -35,16 +34,6 @@ function parseCssFile (srcDir) {
  */
 function filterFontFace (rules) {
   return rules.filter((rule) => rule.type === 'font-face');
-}
-
-/**
- * @param {string} dir
- * @returns {Promise<IKitCode>}
- */
-async function buildCodeData (dir) {
-  const css = await misc.readText(path.join(dir, 'stylesheet.css'));
-  const js = '';
-  return { css, js };
 }
 
 /**
@@ -199,7 +188,7 @@ function buildFileData (fontFace) {
 /**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @returns {Promise<string>} Meta data file path.
+ * @returns {Promise<IFontMeta>}
  */
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = async (srcDir) => {
@@ -207,12 +196,11 @@ module.exports.createFontSquirrelMeta = async (srcDir) => {
   const ast = parseCssFile(srcDir);
   const [fontFace] = filterFontFace(ast.stylesheet.rules);
 
-  const code = await buildCodeData(srcDir);
-  const font = await buildFontData(fontFace, srcDir);
-  const files = buildFileData(fontFace);
-
   /** @type {IFontMeta} */
-  const data = { code, font, files };
-  const filePath = saveMeta(data, srcDir);
-  return filePath;
+  const data = {
+    dir: srcDir,
+    files: buildFileData(fontFace),
+    font: await buildFontData(fontFace, srcDir),
+  };
+  return data;
 };

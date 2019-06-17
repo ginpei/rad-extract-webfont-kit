@@ -2,8 +2,6 @@
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
-const { saveMeta } = require('../saveMeta');
-const { readText } = require('../misc');
 
 /**
  * @param {string} dir
@@ -41,23 +39,6 @@ function readFontsComXml (srcDir) {
     woff2: path.join('Fonts/', font.woff2),
   }));
   return fonts;
-}
-
-/**
- * @param {string} dir
- * @returns {Promise<IKitCode>}
- */
-async function buildCodeData (dir) {
-  const html = await readText(path.join(dir, 'demo-async.htm'));
-  const licenseStartIndex = html.indexOf('<pre>/*') + 5;
-  const licenseEndIndex = html.indexOf('*/</pre>') + 2;
-  const licenseCssComment = html.slice(licenseStartIndex, licenseEndIndex);
-
-  const cssBody = await readText(path.join(dir, 'demo-async.css'));
-  const css = `${licenseCssComment}\n${cssBody}`;
-
-  const js = await readText(path.join(dir, 'mtiFontTrackingCode.js'));
-  return { css, js };
 }
 
 /**
@@ -144,18 +125,16 @@ function createFont (kitFonts) {
 /**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @returns {Promise<string>} Meta data file path.
+ * @returns {Promise<IFontMeta>}
  */
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
 
-  const code = await buildCodeData(srcDir);
-  const files = buildFileData(kitFonts);
-  const font = createFont(kitFonts);
-
   /** @type {IFontMeta} */
-  const data = { code, files, font };
-  const destFile = saveMeta(data, srcDir);
-
-  resolve(destFile);
+  const data = {
+    dir: srcDir,
+    files: buildFileData(kitFonts),
+    font: createFont(kitFonts),
+  };
+  resolve(data);
 });

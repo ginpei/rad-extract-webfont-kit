@@ -20,7 +20,7 @@ function generateThumbnail (dir) {
 
 /**
  * @param {IExtractKitOptions} options
- * @param {(error: Error | null, result?: IExtractKitResult) => void} cb
+ * @param {(error: Error | null, result?: IFontMeta) => void} cb
  */
 module.exports = async (options, cb) => {
   if (options.verbose) {
@@ -30,9 +30,9 @@ module.exports = async (options, cb) => {
   try {
     const { outDir } = options;
     await extract(options.zipPath, outDir);
-    const filePath = await generateMeta(outDir);
+    const meta = await generateMeta(outDir);
     await generateThumbnail(outDir);
-    cb(null, filePath);
+    cb(null, meta);
   } catch (error) {
     cb(error);
   }

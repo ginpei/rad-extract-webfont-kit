@@ -15,5 +15,6 @@ extractWebfontKit({
     return;
   }
 
-  process.stdout.write(`Done: ${result}\n`);
+  // eslint-disable-next-line no-console
+  console.log('Done:', result);
 });

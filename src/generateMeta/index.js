@@ -35,17 +35,15 @@ async function detectKitType (dir) {
 /**
  * Generate meta data JSON file to use web fonts.
  * @param {string} srcDir
- * @returns {Promise<string>}
+ * @returns {Promise<IFontMeta>}
  */
 module.exports = async (srcDir) => {
   const type = await detectKitType(srcDir);
   if (type === KitType.fontsComMulti) {
-    const metaFilePath = await createFontsComMultiMeta(srcDir);
-    return metaFilePath;
+    return createFontsComMultiMeta(srcDir);
   }
   if (type === KitType.fontSquirrelCom) {
-    const metaFilePath = await createFontSquirrelMeta(srcDir);
-    return metaFilePath;
+    return createFontSquirrelMeta(srcDir);
   }
 
   throw new Error('Unknown type of webfont kit');

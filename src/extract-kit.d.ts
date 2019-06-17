@@ -105,5 +105,5 @@ interface IKitCode {
 interface IFontMeta {
   font: Font;
   files: string[];
-  code: IKitCode;
+  dir: string;
 }
