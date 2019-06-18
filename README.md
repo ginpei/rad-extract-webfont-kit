@@ -19,6 +19,6 @@ extractKit({
     return;
   }
 
-  process.stdout.write(`Done: ${result}\n`);
+  process.stdout.write('Done:', result);
 });
 ```
