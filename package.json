@@ -11,28 +11,28 @@
   },
   "dependencies": {
     "@types/css": "0.0.31",
-    "@types/node": "^11.11.3",
-    "@types/tmp": "0.0.34",
+    "@types/node": "^12.0.8",
+    "@types/tmp": "0.1.0",
     "@types/yauzl": "^2.9.1",
     "css": "^2.2.4",
-    "fast-xml-parser": "^3.12.14",
+    "fast-xml-parser": "^3.12.16",
     "fontmin": "^0.9.7-beta",
     "tmp": "^0.1.0",
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.6",
-    "@types/sinon": "^7.0.10",
+    "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.13",
     "@types/sinon-chai": "^3.2.2",
     "chai": "^4.2.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "mocha": "^3.1.2",
-    "sinon": "^6.0.0",
-    "sinon-chai": "^3.2.0",
-    "typescript": "^3.3.3333"
+    "eslint-plugin-import": "^2.17.3",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
+    "typescript": "^3.5.2"
   },
   "publishConfig": {
     "access": "public"
