@@ -5,7 +5,13 @@
 
 ## Usage
 
-TODO install
+### Install
+
+```console
+$ npm install @ginpei/rad-extract-webfont-kit
+```
+
+### Invoke
 
 ```js
 const extractKit = require('extract-webfont-kit');
