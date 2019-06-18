@@ -14,7 +14,7 @@ $ npm install @ginpei/rad-extract-webfont-kit
 ### Invoke
 
 ```js
-const extractKit = require('extract-webfont-kit');
+const extractKit = require('@ginpei/rad-extract-webfont-kit');
 
 extractKit({
   outDir: 'path/to/out-dir/',
