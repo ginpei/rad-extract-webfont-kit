@@ -46,5 +46,5 @@ module.exports = async (srcDir) => {
     return createFontSquirrelMeta(srcDir);
   }
 
-  throw new Error('Unknown type of webfont kit');
+  throw new Error('Unsupported type of webfont kit');
 };
