@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "nodemon server",
     "lint": "eslint ./*.js src/**/*.js",
-    "start": "node server",
     "test": "mocha test/setup.js  test",
     "type-check": "tsc"
   },
@@ -22,11 +21,9 @@
     "eslint": "^5.15.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "express": "^4.16.4",
     "fast-xml-parser": "^3.12.14",
     "fontmin": "^0.9.7-beta",
     "mocha": "^3.1.2",
-    "multer": "^1.4.1",
     "nodemon": "^1.18.10",
     "sinon": "^6.0.0",
     "sinon-chai": "^3.2.0",
