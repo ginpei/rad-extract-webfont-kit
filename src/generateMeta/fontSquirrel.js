@@ -9,8 +9,14 @@ const misc = require('../misc');
  */
 module.exports.isFontSquirrel = (srcDir) => {
   const filePath = path.join(srcDir, 'generator_config.txt');
-  const text = fs.readFileSync(filePath, 'utf8');
 
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+  } catch (error) {
+    return Promise.resolve(false);
+  }
+
+  const text = fs.readFileSync(filePath, 'utf8');
   const startText = '# Font Squirrel Font-face Generator Configuration File';
   const result = text.startsWith(startText);
 
