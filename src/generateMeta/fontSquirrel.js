@@ -111,7 +111,7 @@ async function buildFontData (fontFace, dir) {
     fontFamily,
     fontProvider: 'fontsquirrel.com',
     fontProviderWebSite: 'fontsquirrel.com',
-    fontType: 'standard',
+    fontType: 'upload',
     image: {
       height: '25px',
       src: '',

@@ -77,7 +77,7 @@ describe('extractKit', () => {
         fontFamily: 'Toyota Type',
         fontProvider: 'fonts.com',
         fontProviderWebSite: 'fonts.com',
-        fontType: 'standard',
+        fontType: 'upload',
         image: {
           height: '25px',
           src: '',
@@ -186,7 +186,7 @@ describe('extractKit', () => {
           fontFamily: 'interstatelight',
           fontProvider: 'fontsquirrel.com',
           fontProviderWebSite: 'fontsquirrel.com',
-          fontType: 'standard',
+          fontType: 'upload',
           image: {
             height: '25px',
             src: '',

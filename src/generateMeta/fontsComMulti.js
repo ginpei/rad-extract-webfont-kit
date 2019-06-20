@@ -109,7 +109,7 @@ function createFont (kitFonts) {
     fontFamily: kitFonts[0].familyName,
     fontProvider: 'fonts.com',
     fontProviderWebSite: 'fonts.com',
-    fontType: 'standard', // TODO optional?
+    fontType: 'upload',
     image: {
       height: '25px',
       src: '',
