@@ -4,6 +4,11 @@ const {
 } = require('./fontsComMulti');
 
 const {
+  createFontsComMeta,
+  isFontsCom,
+} = require('./fontsCom');
+
+const {
   createFontSquirrelMeta,
   isFontSquirrel,
 } = require('./fontSquirrel');
@@ -25,6 +30,11 @@ async function detectKitType (dir) {
   if (await isFontsComMulti(dir)) {
     return KitType.fontsComMulti;
   }
+
+  if (await isFontsCom(dir)) {
+    return KitType.fontsCom;
+  }
+
   if (await isFontSquirrel(dir)) {
     return KitType.fontSquirrelCom;
   }
@@ -42,6 +52,11 @@ module.exports = async (srcDir) => {
   if (type === KitType.fontsComMulti) {
     return createFontsComMultiMeta(srcDir);
   }
+
+  if (type === KitType.fontsCom) {
+    return createFontsComMeta(srcDir);
+  }
+
   if (type === KitType.fontSquirrelCom) {
     return createFontSquirrelMeta(srcDir);
   }

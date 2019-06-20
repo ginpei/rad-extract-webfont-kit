@@ -161,6 +161,90 @@ describe('extractKit', () => {
     });
   });
 
+  describe('with a kit from Fonts.com', () => {
+    describe('as ideal kit', () => {
+      before(async () => {
+        ({
+          error,
+          meta,
+          tmpDir,
+        } = await runOnTmp('fontscom.zip'));
+      });
+
+      it('runs without error', () => {
+        if (error) {
+          console.error(error);
+        }
+        expect(error).to.be.null;
+      });
+
+      it('returns output dir', () => {
+        expect(meta.dir).to.be.eq(path.join(tmpDir));
+      });
+
+      it('creates font data', () => {
+        /** @type {Font} */
+        const expected = {
+          displayName: 'ITC Tabula™ W01 Book',
+          fontFamily: 'Tabula ITC W01 Book',
+          fontProvider: 'fonts.com',
+          fontProviderWebSite: 'fonts.com',
+          fontType: 'upload',
+          image: {
+            height: '25px',
+            src: '',
+            top: 0,
+          },
+          monotypeVariationId: '',
+          selectedVariation: undefined,
+          variations: [
+            {
+              displayName: 'ITC Tabula™ W01 Book',
+              fontFamily: 'Tabula ITC W01 Book',
+              monotypeVariationId: '',
+            },
+          ],
+        };
+        expect(meta.font).to.be.eql(expected);
+      });
+
+      it('creates import files data', () => {
+        const expected = [
+          'demo-async.css',
+          'Fonts/fcccbee8-5a10-4150-b22b-84da462defdc.eot',
+          'Fonts/043503c4-0c43-4cd2-a54a-7c2cb2bf197d.woff',
+          'Fonts/9682b901-d652-45f0-b484-bbd12085ad67.ttf',
+          'Fonts/92ab452d-729a-46ce-b8dc-cf2cb5146c7a.svg',
+        ];
+        expect(meta.files).to.be.eql(expected);
+      });
+    });
+
+    describe('without HTML file', () => {
+      /** @type {sinon.SinonStub} */
+      let findFilesByExtension;
+
+      before(async () => {
+        findFilesByExtension = sinon.stub(misc, 'findFilesByExtension')
+          .returns(Promise.resolve([]));
+
+        ({
+          error,
+          meta,
+          tmpDir,
+        } = await runOnTmp('fontsquirrel.zip'));
+      });
+
+      after(() => {
+        findFilesByExtension.restore();
+      });
+
+      it('throws with message', () => {
+        expect(error.message).to.be.eq('Kit must contains an HTML file to parse');
+      });
+    });
+  });
+
   describe('with a kit from FontSquirrel.com', () => {
     describe('as ideal kit', () => {
       before(async () => {
