@@ -324,4 +324,88 @@ describe('extractKit', () => {
       });
     });
   });
+
+  describe('with a kit from Linotype', () => {
+    describe('as ideal kit', () => {
+      before(async () => {
+        ({
+          error,
+          meta,
+          tmpDir,
+        } = await runOnTmp('linotype.zip'));
+      });
+
+      it('runs without error', () => {
+        if (error) {
+          console.error(error);
+        }
+        expect(error).to.be.null;
+      });
+
+      it('returns output dir', () => {
+        expect(meta.dir).to.be.eq(path.join(tmpDir));
+      });
+
+      it('creates font data', () => {
+        /** @type {Font} */
+        const expected = {
+          displayName: 'Anodyne W01 Shadow',
+          fontFamily: 'Anodyne W01 Shdw',
+          fontProvider: 'linotype',
+          fontProviderWebSite: 'linotype.com',
+          fontType: 'upload',
+          image: {
+            height: '25px',
+            src: '',
+            top: 0,
+          },
+          monotypeVariationId: '',
+          selectedVariation: undefined,
+          variations: [
+            {
+              displayName: 'Anodyne W01 Shadow',
+              fontFamily: 'Anodyne W01 Shdw',
+              monotypeVariationId: '',
+            },
+          ],
+        };
+        expect(meta.font).to.be.eql(expected);
+      });
+
+      it('creates import files data', () => {
+        const expected = [
+          'demo-async.css',
+          'Fonts/1289922/f4258f11-b720-4398-8e6e-9d384824b6f0.eot',
+          'Fonts/1289922/8312f781-2ff7-43ff-bcb2-a15f3e8ab027.woff',
+          'Fonts/1289922/b8fd6352-55cc-4d34-91d6-400e852f539b.ttf',
+          'Fonts/1289922/c8cd2cb2-3158-48fd-aeb1-d28e177a4234.svg',
+        ];
+        expect(meta.files).to.be.eql(expected);
+      });
+    });
+
+    describe('without HTML file', () => {
+      /** @type {sinon.SinonStub} */
+      let findFilesByExtension;
+
+      before(async () => {
+        findFilesByExtension = sinon.stub(misc, 'findFilesByExtension')
+          .returns(Promise.resolve([]));
+
+        ({
+          error,
+          meta,
+          tmpDir,
+        } = await runOnTmp('fontsquirrel.zip'));
+      });
+
+      after(() => {
+        findFilesByExtension.restore();
+      });
+
+      it('throws with message', () => {
+        expect(error.message).to.be.eq('Kit must contains an HTML file to parse');
+      });
+    });
+  });
 });

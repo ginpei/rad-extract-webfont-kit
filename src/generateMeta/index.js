@@ -13,11 +13,17 @@ const {
   isFontSquirrel,
 } = require('./fontSquirrel');
 
+const {
+  createLinotypeMeta,
+  isLinotype,
+} = require('./linotype');
+
 /** @enum {string} */
 const KitType = {
   fontsCom: 'fontsCom',
   fontsComMulti: 'fontsComMulti',
   fontSquirrelCom: 'fontSquirrelCom',
+  linotype: 'linotype',
   unknown: 'unknown',
 };
 
@@ -37,6 +43,10 @@ async function detectKitType (dir) {
 
   if (await isFontSquirrel(dir)) {
     return KitType.fontSquirrelCom;
+  }
+
+  if (await isLinotype(dir)) {
+    return KitType.linotype;
   }
 
   return KitType.unknown;
@@ -59,6 +69,10 @@ module.exports = async (srcDir) => {
 
   if (type === KitType.fontSquirrelCom) {
     return createFontSquirrelMeta(srcDir);
+  }
+
+  if (type === KitType.linotype) {
+    return createLinotypeMeta(srcDir);
   }
 
   throw new Error('Unsupported type of webfont kit');
