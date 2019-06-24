@@ -1,6 +1,6 @@
-const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
+const css = require('../css');
 const misc = require('../misc');
 
 /**
@@ -22,60 +22,6 @@ module.exports.isFontsCom = (srcDir) => new Promise((resolve) => {
 
   resolve(result);
 });
-
-/**
- * @param {string} srcDir
- * @returns {Promise<import('css').Stylesheet>}
- */
-function parseCssFile (srcDir) {
-  return new Promise((resolve, reject) => {
-    const filePath = path.join(srcDir, 'demo-async.css');
-    fs.readFile(filePath, 'utf8', (error, cssText) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      const ast = cssParser.parse(cssText);
-      resolve(ast);
-    });
-  });
-}
-
-/**
- * @param {Array<import('css').Rule | import('css').Comment | import('css').AtRule>} rules
- * @returns {import('css').FontFace[]}
- */
-function filterFontFace (rules) {
-  return rules.filter((rule) => rule.type === 'font-face');
-}
-
-/**
- * @param {import('css').Declaration | import('css').Comment} declaration
- * @returns {declaration is import('css').Declaration}
- */
-function isDeclaration (declaration) {
-  return declaration.type === 'declaration';
-}
-
-/**
- * @param {import('css').FontFace} fontFace
- * @returns {string}
- */
-function getFontFamilyName (fontFace) {
-  /** @type {import('css').Declaration | null} */
-  const fontFamilyDec = fontFace.declarations.find((dec) => {
-    if (!isDeclaration(dec)) { return false; }
-    return dec.property === 'font-family';
-  });
-  if (!fontFamilyDec) {
-    return '';
-  }
-
-  const fontFamily = fontFamilyDec.value
-    .slice(1, -1); // "'foo'" => 'foo'
-  return fontFamily;
-}
 
 /**
  * @param {string} dir
@@ -106,7 +52,7 @@ async function getDisplayName (dir) {
  * @returns {Promise<Font>}
  */
 async function buildFontData (fontFace, dir) {
-  const fontFamily = getFontFamilyName(fontFace);
+  const fontFamily = css.getFontFamilyValue(fontFace);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
@@ -139,72 +85,13 @@ async function buildFontData (fontFace, dir) {
 }
 
 /**
- * Parse `src` values of `@font-face`.
- * Split by "," before passing text.
- * @param {string} text
- * @returns {string[]}
- * @example
- * const src = `url(\'my-font.eot?#iefix\') format(\'embedded-opentype\'),
- *   url(\'my-font.woff\') format(\'woff\')'`;
- * const list = src.split(',');
- * const pairs = list.map((v) => parseUrl(v));
- * // [ ['my-font.eot', 'embedded-opentype'],
- * //   ['my-font.woff', 'woff'] ]
- */
-function parseUrl (text) {
-  const rxSrc = /url\((?:'(.*?)'|"(.*?)")\)(?: format\((?:'(.*?)'|"(.*?)")\))?/;
-  const [, file1, file2, format1, format2] = text.match(rxSrc);
-  const file = file1 || file2;
-  const format = format1 || format2;
-  return [file, format];
-}
-
-/**
- * @param {import('css').FontFace} fontFace
- * @returns {string[]}
- */
-function getFontFilePaths (fontFace) {
-  /** @type {import('css').Declaration[]} */
-  const srcDecList = fontFace.declarations.filter(
-    (dec) => isDeclaration(dec) && dec.property === 'src',
-  );
-
-  // rewrite these with flat() when migrated Node.js v12
-  /** @type {Set<string>} */
-  const paths = new Set();
-  srcDecList.forEach((dec) => {
-    dec.value.split(',')
-      .map((v) => parseUrl(v)) // [[filePath, format], ...]
-      .forEach(([file]) => {
-        let p = file;
-
-        // remove query from like "my-font.eot?#iefix"
-        const iSearch = p.indexOf('?');
-        if (iSearch >= 0) {
-          p = p.slice(0, iSearch);
-        }
-
-        // remove query from like "xxxxxxxx.svg#xxxxxxxx"
-        const iHash = p.indexOf('#');
-        if (iHash >= 0) {
-          p = p.slice(0, iHash);
-        }
-
-        paths.add(p);
-      });
-  });
-
-  return [...paths];
-}
-
-/**
  * @param {import('css').FontFace} fontFace
  * @returns {string[]}
  */
 function getFilePaths (fontFace) {
   const pathList = [
     'demo-async.css',
-    ...getFontFilePaths(fontFace),
+    ...css.getFontFilePaths(fontFace),
   ];
   return pathList;
 }
@@ -217,8 +104,9 @@ function getFilePaths (fontFace) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontsComMeta = async (srcDir) => {
   // assume it contains only 1 font-face
-  const ast = await parseCssFile(srcDir);
-  const [fontFace] = filterFontFace(ast.stylesheet.rules);
+  const cssFilePath = path.join(srcDir, 'demo-async.css');
+  const ast = await css.parseCssFile(cssFilePath);
+  const [fontFace] = css.filterFontFaceRule(ast.stylesheet.rules);
   if (!fontFace) {
     throw new Error('Failed to find @font-face at-rule');
   }

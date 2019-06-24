@@ -1,6 +1,6 @@
-const cssParser = require('css');
 const fs = require('fs');
 const path = require('path');
+const css = require('../css');
 const misc = require('../misc');
 
 /**
@@ -22,52 +22,6 @@ module.exports.isFontSquirrel = (srcDir) => {
 
   return Promise.resolve(result);
 };
-
-/**
- * @param {string} srcDir
- * @returns {import('css').Stylesheet}
- */
-function parseCssFile (srcDir) {
-  const filePath = path.join(srcDir, 'stylesheet.css');
-  const cssText = fs.readFileSync(filePath, 'utf8');
-  const ast = cssParser.parse(cssText);
-  return ast;
-}
-
-/**
- * @param {Array<import('css').Rule | import('css').Comment | import('css').AtRule>} rules
- * @returns {import('css').FontFace[]}
- */
-function filterFontFace (rules) {
-  return rules.filter((rule) => rule.type === 'font-face');
-}
-
-/**
- * @param {import('css').Declaration | import('css').Comment} declaration
- * @returns {declaration is import('css').Declaration}
- */
-function isDeclaration (declaration) {
-  return declaration.type === 'declaration';
-}
-
-/**
- * @param {import('css').FontFace} fontFace
- * @returns {string}
- */
-function getFontFamilyName (fontFace) {
-  /** @type {import('css').Declaration | null} */
-  const fontFamilyDec = fontFace.declarations.find((dec) => {
-    if (!isDeclaration(dec)) { return false; }
-    return dec.property === 'font-family';
-  });
-  if (!fontFamilyDec) {
-    return '';
-  }
-
-  const fontFamily = fontFamilyDec.value
-    .slice(1, -1); // "'foo'" => 'foo'
-  return fontFamily;
-}
 
 /**
  * @param {string} dir
@@ -98,7 +52,7 @@ async function getDisplayName (dir) {
  * @returns {Promise<Font>}
  */
 async function buildFontData (fontFace, dir) {
-  const fontFamily = getFontFamilyName(fontFace);
+  const fontFamily = css.getFontFamilyValue(fontFace);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
@@ -131,62 +85,13 @@ async function buildFontData (fontFace, dir) {
 }
 
 /**
- * Parse `src` values of `@font-face`.
- * Split by "," before passing text.
- * @param {string} text
- * @returns {string[]}
- * @example
- * const src = `url(\'my-font.eot?#iefix\') format(\'embedded-opentype\'),
- *   url(\'my-font.woff\') format(\'woff\')'`;
- * const list = src.split(',');
- * const pairs = list.map((v) => parseUrl(v));
- * // [ ['my-font.eot', 'embedded-opentype'],
- * //   ['my-font.woff', 'woff'] ]
- */
-function parseUrl (text) {
-  const rxSrc = /url\((?:'(.*?)'|"(.*?)")\)(?: format\((?:'(.*?)'|"(.*?)")\))?/;
-  const [, file1, file2, format1, format2] = text.match(rxSrc);
-  const file = file1 || file2;
-  const format = format1 || format2;
-  return [file, format];
-}
-
-/**
  * @param {import('css').FontFace} fontFace
  * @returns {string[]}
  */
-function buildFontsData (fontFace) {
-  /** @type {import('css').Declaration[]} */
-  const srcDecList = fontFace.declarations.filter(
-    (dec) => isDeclaration(dec) && dec.property === 'src',
-  );
-
-  // rewrite these with flat() when migrated Node.js v12
-  /** @type {string[]} */
-  const paths = [];
-  srcDecList.forEach((dec) => {
-    dec.value.split(',')
-      .map((v) => parseUrl(v)) // [[filePath, format], ...]
-      .forEach(([file]) => {
-        // remove query from like "my-font.eot?#iefix"
-        const i = file.indexOf('?');
-        const p = i < 0 ? file : file.slice(0, i);
-
-        paths.push(p);
-      });
-  });
-
-  return paths;
-}
-
-/**
- * @param {import('css').FontFace} fontFace
- * @returns {string[]}
- */
-function buildFileData (fontFace) {
+function getFilePaths (fontFace) {
   const pathList = [
     'stylesheet.css',
-    ...buildFontsData(fontFace),
+    ...css.getFontFilePaths(fontFace),
   ];
   return pathList;
 }
@@ -199,14 +104,21 @@ function buildFileData (fontFace) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = async (srcDir) => {
   // assume it contains only 1 font-face
-  const ast = parseCssFile(srcDir);
-  const [fontFace] = filterFontFace(ast.stylesheet.rules);
+  const cssFilePath = path.join(srcDir, 'stylesheet.css');
+  const ast = await css.parseCssFile(cssFilePath);
+  const [fontFace] = css.filterFontFaceRule(ast.stylesheet.rules);
+  if (!fontFace) {
+    throw new Error('Failed to find @font-face at-rule');
+  }
+
+  const files = getFilePaths(fontFace);
+  const font = await buildFontData(fontFace, srcDir);
 
   /** @type {IFontMeta} */
   const data = {
     dir: srcDir,
-    files: buildFileData(fontFace),
-    font: await buildFontData(fontFace, srcDir),
+    files,
+    font,
   };
   return data;
 };

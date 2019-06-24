@@ -293,7 +293,6 @@ describe('extractKit', () => {
         const expected = [
           'stylesheet.css',
           'interstate-light-webfont.eot',
-          'interstate-light-webfont.eot',
           'interstate-light-webfont.woff2',
           'interstate-light-webfont.woff',
         ];
