@@ -101,16 +101,11 @@ function getFilePaths (fontFace) {
  */
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontsComMeta = async (srcDir) => {
-  // assume it contains only 1 font-face
   const cssFilePath = path.join(srcDir, 'demo-async.css');
-  const ast = await css.parseCssFile(cssFilePath);
-  const [fontFace] = css.filterFontFaceRule(ast.stylesheet.rules);
-  if (!fontFace) {
-    throw new Error('Failed to find @font-face at-rule');
-  }
+  const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
-  const files = getFilePaths(fontFace);
-  const font = await buildFontData(fontFace, srcDir);
+  const files = getFilePaths(fontFaceRule);
+  const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {

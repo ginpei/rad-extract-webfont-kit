@@ -29,6 +29,22 @@ function filterFontFaceRule (rules) {
 }
 module.exports.filterFontFaceRule = filterFontFaceRule;
 
+async function findOneFontFaceRule (cssFilePath) {
+  // assume it contains only 1 font-face
+  const ast = await parseCssFile(cssFilePath);
+  const rules = filterFontFaceRule(ast.stylesheet.rules);
+  if (rules.length < 1) {
+    throw new Error('Failed to find @font-face at-rule');
+  }
+  if (rules.length > 1) {
+    throw new Error('It contains more than 1 @font-face at-rules');
+  }
+
+  const fontFaceRule = rules[0];
+  return fontFaceRule;
+}
+module.exports.findOneFontFaceRule = findOneFontFaceRule;
+
 /**
  * Parse `src` values of `@font-face`.
  * Split by "," before passing text.
