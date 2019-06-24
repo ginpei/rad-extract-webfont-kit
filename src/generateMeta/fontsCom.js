@@ -71,13 +71,11 @@ async function buildFontData (fontFace, dir) {
       src: '',
       top: 0,
     },
-    monotypeVariationId: '', // TODO remove
     selectedVariation: undefined,
     variations: [
       {
         displayName,
         fontFamily,
-        monotypeVariationId: '', // TODO remove
       },
     ],
   };

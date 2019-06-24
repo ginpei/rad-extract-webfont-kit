@@ -83,68 +83,55 @@ describe('extractKit', () => {
           src: '',
           top: 0,
         },
-        monotypeVariationId: '',
         selectedVariation: undefined,
         variations: [
           {
             displayName: 'Semibold',
             fontFamily: 'Toyota Type Semibold',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Italic',
             fontFamily: 'Toyota Type Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Book',
             fontFamily: 'Toyota Type Book',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Bold Italic',
             fontFamily: 'Toyota Type Bold Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Light',
             fontFamily: 'Toyota Type Light',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Black',
             fontFamily: 'Toyota Type Black',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Semibold Italic',
             fontFamily: 'Toyota Type Semibold Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Black Italic',
             fontFamily: 'Toyota Type Black Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Regular',
             fontFamily: 'Toyota Type',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Book Italic',
             fontFamily: 'Toyota Type Book Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Light Italic',
             fontFamily: 'Toyota Type Light Italic',
-            monotypeVariationId: '',
           },
           {
             displayName: 'Bold',
             fontFamily: 'Toyota Type Bold',
-            monotypeVariationId: '',
           },
         ],
       };
@@ -195,13 +182,11 @@ describe('extractKit', () => {
             src: '',
             top: 0,
           },
-          monotypeVariationId: '',
           selectedVariation: undefined,
           variations: [
             {
               displayName: 'ITC Tabula™ W01 Book',
               fontFamily: 'Tabula ITC W01 Book',
-              monotypeVariationId: '',
             },
           ],
         };
@@ -276,13 +261,11 @@ describe('extractKit', () => {
             src: '',
             top: 0,
           },
-          monotypeVariationId: '',
           selectedVariation: undefined,
           variations: [
             {
               displayName: 'Interstate-Light Regular',
               fontFamily: 'interstatelight',
-              monotypeVariationId: '',
             },
           ],
         };
@@ -359,13 +342,11 @@ describe('extractKit', () => {
             src: '',
             top: 0,
           },
-          monotypeVariationId: '',
           selectedVariation: undefined,
           variations: [
             {
               displayName: 'Anodyne W01 Shadow',
               fontFamily: 'Anodyne W01 Shdw',
-              monotypeVariationId: '',
             },
           ],
         };

@@ -91,7 +91,6 @@ function createVariations (kitFonts) {
     const variation = {
       displayName,
       fontFamily: font.cssFamilyName,
-      monotypeVariationId: '',
     };
     return variation;
   });
@@ -115,7 +114,6 @@ function createFont (kitFonts) {
       src: '',
       top: 0,
     },
-    monotypeVariationId: '',
     selectedVariation: undefined,
     variations: createVariations(kitFonts),
   };

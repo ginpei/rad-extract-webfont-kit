@@ -97,14 +97,14 @@ interface Font {
     src: string;
     top: number;
   };
-  monotypeVariationId: string; // TODO maybe the default?
+  monotypeVariationId?: string; // TODO maybe the default?
   selectedVariation?: FontVariation; // added in `selectFontVariation()`
   variations: FontVariation[];
 }
 interface FontVariation {
   displayName: string; // <- record.fontVariantDisplayName
   fontFamily: string; // <- `${record.cssFamilyName} ${record.fontVariantDisplayName}`
-  monotypeVariationId: string;
+  monotypeVariationId?: string;
 }
 
 /**
