@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon server",
+    "download-test-assets": "node scripts/download-test-assets",
     "lint": "eslint .",
     "test": "mocha test/setup.js  test",
     "type-check": "tsc"
