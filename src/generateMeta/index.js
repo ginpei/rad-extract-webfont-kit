@@ -18,6 +18,11 @@ const {
   isLinotype,
 } = require('./linotype');
 
+const {
+  createMyFontsMeta,
+  isMyFonts,
+} = require('./myFonts');
+
 /**
  * Generate meta data JSON file to use web fonts.
  * @param {string} dir
@@ -38,6 +43,10 @@ module.exports = async (dir) => {
 
   if (await isLinotype(dir)) {
     return createLinotypeMeta(dir);
+  }
+
+  if (await isMyFonts(dir)) {
+    return createMyFontsMeta(dir);
   }
 
   throw new Error('Unsupported type of webfont kit');

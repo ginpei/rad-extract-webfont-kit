@@ -389,4 +389,61 @@ describe('extractKit', () => {
       });
     });
   });
+
+  describe('with a kit from MyFonts', () => {
+    const zipFileName = 'myfonts.zip';
+
+    before(async () => {
+      ({
+        error,
+        meta,
+        tmpDir,
+      } = await runOnTmp(zipFileName));
+    });
+
+    it('runs without error', () => {
+      if (error) {
+        console.error(error);
+      }
+      expect(error).to.be.null;
+    });
+
+    it('returns output dir', () => {
+      expect(meta.dir).to.be.eq(path.join(tmpDir));
+    });
+
+    it('creates font data', () => {
+      /** @type {Font} */
+      const expected = {
+        displayName: 'Quire Sans Extra Light Italic',
+        fontFamily: 'QuireSansW04-ExtraLightIt',
+        fontProvider: 'linotype',
+        fontProviderWebSite: 'linotype.com',
+        fontType: 'upload',
+        image: {
+          height: '25px',
+          src: '',
+          top: 0,
+        },
+        selectedVariation: undefined,
+        variations: [
+          {
+            displayName: 'Quire Sans Extra Light Italic',
+            fontFamily: 'QuireSansW04-ExtraLightIt',
+          },
+        ],
+      };
+      expect(meta.font).to.be.eql(expected);
+    });
+
+    it('creates import files data', () => {
+      const expected = [
+        'MyFontsWebfontsKit/MyFontsWebfontsKit.css',
+        'webfonts/2B8BF3_0_0.eot',
+        'webfonts/2B8BF3_0_0.woff',
+        'webfonts/2B8BF3_0_0.ttf',
+      ];
+      expect(meta.files).to.be.eql(expected);
+    });
+  });
 });
