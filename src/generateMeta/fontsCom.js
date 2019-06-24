@@ -30,7 +30,7 @@ module.exports.isFontsCom = (srcDir) => new Promise((resolve) => {
 async function getDisplayName (dir) {
   // Expect such HTML:
   // <div class="fontdisplay">
-  //     <div style="font-family:'Tabula ITC W01 Book';"> ITC Tabula™ W01 Book </div>
+  //   <div style="font-family:'Tabula ITC W01 Book';"> ITC Tabula™ W01 Book </div>
   // </div>
 
   const startTag = '<div class="fontdisplay">';
