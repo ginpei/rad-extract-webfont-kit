@@ -76,12 +76,12 @@ function isDeclaration (declaration) {
 module.exports.isDeclaration = isDeclaration;
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @returns {string}
  */
-function getFontFamilyValue (fontFace) {
+function getFontFamilyValue (fontFaceRule) {
   /** @type {import('css').Declaration | null} */
-  const fontFamilyDec = fontFace.declarations.find((dec) => {
+  const fontFamilyDec = fontFaceRule.declarations.find((dec) => {
     if (!isDeclaration(dec)) { return false; }
     return dec.property === 'font-family';
   });
@@ -96,12 +96,12 @@ function getFontFamilyValue (fontFace) {
 module.exports.getFontFamilyValue = getFontFamilyValue;
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @returns {string[]}
  */
-function getFontFilePaths (fontFace) {
+function getFontFilePaths (fontFaceRule) {
   /** @type {import('css').Declaration[]} */
-  const srcDecList = fontFace.declarations.filter(
+  const srcDecList = fontFaceRule.declarations.filter(
     (dec) => isDeclaration(dec) && dec.property === 'src',
   );
 

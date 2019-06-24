@@ -47,12 +47,12 @@ async function getDisplayName (dir) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @param {string} dir
  * @returns {Promise<Font>}
  */
-async function buildFontData (fontFace, dir) {
-  const fontFamily = css.getFontFamilyValue(fontFace);
+async function buildFontData (fontFaceRule, dir) {
+  const fontFamily = css.getFontFamilyValue(fontFaceRule);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
@@ -83,13 +83,13 @@ async function buildFontData (fontFace, dir) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @returns {string[]}
  */
-function getFilePaths (fontFace) {
+function getFilePaths (fontFaceRule) {
   const pathList = [
     'demo-async.css',
-    ...css.getFontFilePaths(fontFace),
+    ...css.getFontFilePaths(fontFaceRule),
   ];
   return pathList;
 }

@@ -47,12 +47,12 @@ async function getDisplayName (dir) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @param {string} dir
  * @returns {Promise<Font>}
  */
-async function buildFontData (fontFace, dir) {
-  const fontFamily = css.getFontFamilyValue(fontFace);
+async function buildFontData (fontFaceRule, dir) {
+  const fontFamily = css.getFontFamilyValue(fontFaceRule);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
@@ -83,13 +83,13 @@ async function buildFontData (fontFace, dir) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @returns {string[]}
  */
-function getFilePaths (fontFace) {
+function getFilePaths (fontFaceRule) {
   const pathList = [
     'demo-async.css',
-    ...css.getFontFilePaths(fontFace),
+    ...css.getFontFilePaths(fontFaceRule),
   ];
   return pathList;
 }
@@ -102,10 +102,10 @@ function getFilePaths (fontFace) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createLinotypeMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, 'demo-async.css');
-  const fontFace = await css.findOneFontFaceRule(cssFilePath);
+  const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
-  const files = getFilePaths(fontFace);
-  const font = await buildFontData(fontFace, srcDir);
+  const files = getFilePaths(fontFaceRule);
+  const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {

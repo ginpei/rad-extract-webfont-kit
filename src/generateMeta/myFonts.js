@@ -52,12 +52,12 @@ async function getDisplayName (dir, fontFamily) {
 }
 
 /**
- * @param {import('css').FontFace} fontFace
+ * @param {import('css').FontFace} fontFaceRule
  * @param {string} dir
  * @returns {Promise<Font>}
  */
-async function buildFontData (fontFace, dir) {
-  const fontFamily = css.getFontFamilyValue(fontFace);
+async function buildFontData (fontFaceRule, dir) {
+  const fontFamily = css.getFontFamilyValue(fontFaceRule);
   if (!fontFamily) {
     throw new Error('Font-family must be set');
   }
@@ -107,10 +107,10 @@ function getFilePaths (fontFaceRule) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createMyFontsMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, cssFileName);
-  const fontFace = await css.findOneFontFaceRule(cssFilePath);
+  const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
-  const files = getFilePaths(fontFace);
-  const font = await buildFontData(fontFace, srcDir);
+  const files = getFilePaths(fontFaceRule);
+  const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {
