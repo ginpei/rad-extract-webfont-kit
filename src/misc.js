@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
 
-const { Entry, ZipFile } = yauzl;
-
 /**
  * @param {string} dirPath
  */
@@ -21,8 +19,8 @@ function prepareDir (dirPath) {
 module.exports.prepareDir = prepareDir;
 
 /**
- * @param {ZipFile} zipFile
- * @param {Entry} entry
+ * @param {yauzl.ZipFile} zipFile
+ * @param {yauzl.Entry} entry
  * @param {string} destPath
  * @param {(err: Error | null) => void} callback
  */
@@ -52,7 +50,7 @@ function subsetFont (filePath, destPath, glyph, callback) {
     .use(Fontmin.glyph({ text: glyph }))
     .src(filePath)
     .dest(destPath);
-  fontmin.run((err, files) => {
+  fontmin.run((err) => {
     if (err) {
       console.error(err);
       callback(new Error('Failed to minimize font'));
