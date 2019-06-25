@@ -7,13 +7,13 @@ const path = require('path');
  * @param {string} dir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontsComMulti = (dir) => new Promise((resolve, reject) => {
+module.exports.isFontsComMulti = (dir) => new Promise((resolve) => {
   try {
-    // TODO replace with new API
-    const result = fs.existsSync(path.join(dir, 'fontlist.xml'));
-    resolve(result);
+    const filePath = path.join(dir, 'fontlist.xml');
+    fs.accessSync(filePath, fs.constants.F_OK);
+    resolve(true);
   } catch (error) {
-    reject(error);
+    resolve(false);
   }
 });
 
