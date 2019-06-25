@@ -437,8 +437,8 @@ describe('extractKit', () => {
       const expected = {
         displayName: 'Quire Sans Extra Light Italic',
         fontFamily: 'QuireSansW04-ExtraLightIt',
-        fontProvider: 'linotype',
-        fontProviderWebSite: 'linotype.com',
+        fontProvider: 'myfonts',
+        fontProviderWebSite: 'myfonts.com',
         fontType: 'upload',
         image: {
           height: '25px',
