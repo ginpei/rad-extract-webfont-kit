@@ -116,6 +116,7 @@ module.exports.createLinotypeMeta = async (srcDir) => {
     dir: srcDir,
     files,
     font,
+    provider: 'linotype',
   };
   return [data];
 };

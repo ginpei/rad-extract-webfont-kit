@@ -117,4 +117,8 @@ describe('Fonts.com including multi fonts', () => {
     expect(files[2]).to.be.eql('Fonts/0c512a0b-b3e1-4b19-a48e-aa49ef74a189.eot');
     expect(files[73]).to.be.eql('Fonts/96c1475e-c4ad-479a-9e65-228e759893a1.woff2');
   });
+
+  it('sets font provider', () => {
+    expect(metaList[0].provider).to.be.eq('fonts.com');
+  });
 });

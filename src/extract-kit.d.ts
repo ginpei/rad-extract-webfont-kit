@@ -106,4 +106,5 @@ interface IFontMeta {
   dir: string;
   files: string[];
   font: Font;
+  provider: FontProvider;
 }

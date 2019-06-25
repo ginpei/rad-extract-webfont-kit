@@ -141,6 +141,7 @@ module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve)
     dir: srcDir,
     files: buildFileData(kitFonts),
     font: createFont(kitFonts),
+    provider: 'fonts.com',
   };
   resolve([data]);
 });

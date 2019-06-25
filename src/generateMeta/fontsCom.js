@@ -112,6 +112,7 @@ module.exports.createFontsComMeta = async (srcDir) => {
     dir: srcDir,
     files,
     font,
+    provider: 'fonts.com',
   };
   return [data];
 };

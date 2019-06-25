@@ -117,6 +117,7 @@ module.exports.createFontSquirrelMeta = async (srcDir) => {
     dir: srcDir,
     files,
     font,
+    provider: 'fontsquirrel.com',
   };
   return [data];
 };

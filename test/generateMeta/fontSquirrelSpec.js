@@ -77,6 +77,10 @@ describe('with a kit from FontSquirrel.com', () => {
       ];
       expect(metaList[0].files).to.be.eql(expected);
     });
+
+    it('sets font provider', () => {
+      expect(metaList[0].provider).to.be.eq('fontsquirrel.com');
+    });
   });
 
   describe('without HTML file', () => {

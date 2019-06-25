@@ -121,6 +121,7 @@ module.exports.createMyFontsMeta = async (srcDir) => {
     dir: srcDir,
     files,
     font,
+    provider: 'myfonts',
   };
   return [data];
 };
