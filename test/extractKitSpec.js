@@ -30,7 +30,7 @@ describe('extractKit', () => {
         extractKit(options, (error, result) => {
           resolve({
             error,
-            meta: result,
+            metaList: result,
             tmpDir,
           });
         });
@@ -41,15 +41,15 @@ describe('extractKit', () => {
   /** @type {Error} */
   let error;
 
-  /** @type {IFontMeta} */
-  let meta;
+  /** @type {IFontMeta[]} */
+  let metaList;
 
   /** @type {string} */
   let tmpDir;
 
   before(() => {
     error = null;
-    meta = null;
+    metaList = null;
     tmpDir = '/dev/null';
   });
 
@@ -57,7 +57,7 @@ describe('extractKit', () => {
     before(async () => {
       ({
         error,
-        meta,
+        metaList,
         tmpDir,
       } = await runOnTmp('fontscom-multi.zip'));
     });
@@ -66,8 +66,12 @@ describe('extractKit', () => {
       expect(error).to.be.null;
     });
 
+    it('returns one font meta data', () => {
+      expect(metaList.length).to.be.eq(1);
+    });
+
     it('returns output dir', () => {
-      expect(meta.dir).to.be.eq(path.join(tmpDir));
+      expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
     });
 
     it('creates font data', () => {
@@ -135,11 +139,11 @@ describe('extractKit', () => {
           },
         ],
       };
-      expect(meta.font).to.be.eql(expected);
+      expect(metaList[0].font).to.be.eql(expected);
     });
 
     it('creates import files data', () => {
-      const { files } = meta;
+      const { files } = metaList[0];
       expect(files.length).to.be.eql(74);
       expect(files[0]).to.be.eql('demo-async.css');
       expect(files[1]).to.be.eql('mtiFontTrackingCode.js');
@@ -153,7 +157,7 @@ describe('extractKit', () => {
       before(async () => {
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('fontscom.zip'));
       });
@@ -165,8 +169,12 @@ describe('extractKit', () => {
         expect(error).to.be.null;
       });
 
+      it('returns one font meta data', () => {
+        expect(metaList.length).to.be.eq(1);
+      });
+
       it('returns output dir', () => {
-        expect(meta.dir).to.be.eq(path.join(tmpDir));
+        expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
       });
 
       it('creates font data', () => {
@@ -190,7 +198,7 @@ describe('extractKit', () => {
             },
           ],
         };
-        expect(meta.font).to.be.eql(expected);
+        expect(metaList[0].font).to.be.eql(expected);
       });
 
       it('creates import files data', () => {
@@ -201,7 +209,7 @@ describe('extractKit', () => {
           'Fonts/9682b901-d652-45f0-b484-bbd12085ad67.ttf',
           'Fonts/92ab452d-729a-46ce-b8dc-cf2cb5146c7a.svg',
         ];
-        expect(meta.files).to.be.eql(expected);
+        expect(metaList[0].files).to.be.eql(expected);
       });
     });
 
@@ -215,7 +223,7 @@ describe('extractKit', () => {
 
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('fontsquirrel.zip'));
       });
@@ -235,7 +243,7 @@ describe('extractKit', () => {
       before(async () => {
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('fontsquirrel.zip'));
       });
@@ -244,8 +252,12 @@ describe('extractKit', () => {
         expect(error).to.be.null;
       });
 
+      it('returns one font meta data', () => {
+        expect(metaList.length).to.be.eq(1);
+      });
+
       it('returns output dir', () => {
-        expect(meta.dir).to.be.eq(path.join(tmpDir));
+        expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
       });
 
       it('creates font data', () => {
@@ -269,7 +281,7 @@ describe('extractKit', () => {
             },
           ],
         };
-        expect(meta.font).to.be.eql(expected);
+        expect(metaList[0].font).to.be.eql(expected);
       });
 
       it('creates import files data', () => {
@@ -279,7 +291,7 @@ describe('extractKit', () => {
           'interstate-light-webfont.woff2',
           'interstate-light-webfont.woff',
         ];
-        expect(meta.files).to.be.eql(expected);
+        expect(metaList[0].files).to.be.eql(expected);
       });
     });
 
@@ -293,7 +305,7 @@ describe('extractKit', () => {
 
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('fontsquirrel.zip'));
       });
@@ -313,7 +325,7 @@ describe('extractKit', () => {
       before(async () => {
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('linotype.zip'));
       });
@@ -325,8 +337,12 @@ describe('extractKit', () => {
         expect(error).to.be.null;
       });
 
+      it('returns one font meta data', () => {
+        expect(metaList.length).to.be.eq(1);
+      });
+
       it('returns output dir', () => {
-        expect(meta.dir).to.be.eq(path.join(tmpDir));
+        expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
       });
 
       it('creates font data', () => {
@@ -350,7 +366,7 @@ describe('extractKit', () => {
             },
           ],
         };
-        expect(meta.font).to.be.eql(expected);
+        expect(metaList[0].font).to.be.eql(expected);
       });
 
       it('creates import files data', () => {
@@ -361,7 +377,7 @@ describe('extractKit', () => {
           'Fonts/1289922/b8fd6352-55cc-4d34-91d6-400e852f539b.ttf',
           'Fonts/1289922/c8cd2cb2-3158-48fd-aeb1-d28e177a4234.svg',
         ];
-        expect(meta.files).to.be.eql(expected);
+        expect(metaList[0].files).to.be.eql(expected);
       });
     });
 
@@ -375,7 +391,7 @@ describe('extractKit', () => {
 
         ({
           error,
-          meta,
+          metaList,
           tmpDir,
         } = await runOnTmp('fontsquirrel.zip'));
       });
@@ -396,7 +412,7 @@ describe('extractKit', () => {
     before(async () => {
       ({
         error,
-        meta,
+        metaList,
         tmpDir,
       } = await runOnTmp(zipFileName));
     });
@@ -408,8 +424,12 @@ describe('extractKit', () => {
       expect(error).to.be.null;
     });
 
+    it('returns one font meta data', () => {
+      expect(metaList.length).to.be.eq(1);
+    });
+
     it('returns output dir', () => {
-      expect(meta.dir).to.be.eq(path.join(tmpDir));
+      expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
     });
 
     it('creates font data', () => {
@@ -433,7 +453,7 @@ describe('extractKit', () => {
           },
         ],
       };
-      expect(meta.font).to.be.eql(expected);
+      expect(metaList[0].font).to.be.eql(expected);
     });
 
     it('creates import files data', () => {
@@ -443,7 +463,7 @@ describe('extractKit', () => {
         'webfonts/2B8BF3_0_0.woff',
         'webfonts/2B8BF3_0_0.ttf',
       ];
-      expect(meta.files).to.be.eql(expected);
+      expect(metaList[0].files).to.be.eql(expected);
     });
   });
 });

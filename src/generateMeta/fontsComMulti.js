@@ -123,7 +123,7 @@ function createFont (kitFonts) {
 /**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @returns {Promise<IFontMeta>}
+ * @returns {Promise<IFontMeta[]>}
  */
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
@@ -134,5 +134,5 @@ module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve)
     files: buildFileData(kitFonts),
     font: createFont(kitFonts),
   };
-  resolve(data);
+  resolve([data]);
 });

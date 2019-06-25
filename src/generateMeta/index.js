@@ -26,7 +26,7 @@ const {
 /**
  * Generate meta data JSON file to use web fonts.
  * @param {string} dir
- * @returns {Promise<IFontMeta>}
+ * @returns {Promise<IFontMeta[]>}
  */
 module.exports = async (dir) => {
   if (await isFontsComMulti(dir)) {

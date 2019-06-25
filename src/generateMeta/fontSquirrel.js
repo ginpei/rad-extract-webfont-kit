@@ -97,7 +97,7 @@ function getFilePaths (fontFaceRule) {
 /**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @returns {Promise<IFontMeta>}
+ * @returns {Promise<IFontMeta[]>}
  */
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = async (srcDir) => {
@@ -113,5 +113,5 @@ module.exports.createFontSquirrelMeta = async (srcDir) => {
     files,
     font,
   };
-  return data;
+  return [data];
 };
