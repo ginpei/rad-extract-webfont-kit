@@ -103,7 +103,7 @@ interface IKitCode {
 }
 
 interface IFontMeta {
-  font: Font;
-  files: string[];
   dir: string;
+  files: string[];
+  font: Font;
 }
