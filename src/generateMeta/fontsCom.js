@@ -104,11 +104,13 @@ module.exports.createFontsComMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, 'demo-async.css');
   const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
+  const code = await misc.pickUpMonotypeCodeData(srcDir);
   const files = getFilePaths(fontFaceRule);
   const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {
+    code,
     dir: srcDir,
     files,
     font,

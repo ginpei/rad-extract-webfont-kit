@@ -40,6 +40,31 @@ describe('with a kit from MyFonts', () => {
     expect(metaList.length).to.be.eq(1);
   });
 
+  it('creates code data', () => {
+    expect(metaList[0].code).to.be.eql({
+      licenseText: `/**
+ * @license
+ * MyFonts Webfont Build ID 2853875, 2014-07-28T13:44:50-0400
+ *${' '}
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are${' '}
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *${' '}
+ * You may obtain a valid license at the URLs below.
+ *${' '}
+ * Webfont: Quire Sans Extra Light Italic by Monotype${' '}
+ * URL: http://www.myfonts.com/fonts/mti/quire-sans/extra-light-italic/
+ * Copyright: Copyright &#x00A9; 2014 Monotype Imaging Inc.  All rights reserved.
+ * Licensed pageviews: 10,000
+ *${' '}
+ *${' '}
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2853875
+ *${' '}
+ * © 2014 MyFonts Inc
+*/`,
+    });
+  });
+
   it('returns output dir', () => {
     expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
   });

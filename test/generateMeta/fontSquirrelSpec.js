@@ -40,6 +40,10 @@ describe('with a kit from FontSquirrel.com', () => {
       expect(metaList.length).to.be.eq(1);
     });
 
+    it('creates code data', () => {
+      expect(metaList[0].code).to.be.eql({});
+    });
+
     it('returns output dir', () => {
       expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
     });

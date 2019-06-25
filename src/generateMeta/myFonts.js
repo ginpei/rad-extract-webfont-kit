@@ -56,6 +56,20 @@ async function getDisplayName (dir, fontFamily) {
 }
 
 /**
+ * @param {string} dir
+ */
+async function buildCodeData (dir) {
+  const html = await misc.readText(path.join(dir, 'MyFontsWebfontsKit/StartHere.html'));
+  const licenseText = misc.pickUpSimpleTagContent(
+    html,
+    '<!--',
+    '-->',
+  );
+
+  return { licenseText };
+}
+
+/**
  * @param {import('css').FontFace} fontFaceRule
  * @param {string} dir
  * @returns {Promise<Font>}
@@ -113,11 +127,13 @@ module.exports.createMyFontsMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, cssFileName);
   const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
+  const code = await buildCodeData(srcDir);
   const files = getFilePaths(fontFaceRule);
   const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {
+    code,
     dir: srcDir,
     files,
     font,

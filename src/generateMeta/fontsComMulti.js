@@ -2,6 +2,7 @@
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
+const misc = require('../misc');
 
 /**
  * @param {string} dir
@@ -136,8 +137,11 @@ function createFont (kitFonts) {
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
 
+  const code = await misc.pickUpMonotypeCodeData(srcDir);
+
   /** @type {IFontMeta} */
   const data = {
+    code,
     dir: srcDir,
     files: buildFileData(kitFonts),
     font: createFont(kitFonts),

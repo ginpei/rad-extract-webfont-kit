@@ -40,6 +40,29 @@ describe('Linotype', () => {
     expect(metaList.length).to.be.eq(1);
   });
 
+  it('creates code data', () => {
+    expect(metaList[0].code).to.be.eql({
+      licenseText: `/*
+This CSS resource incorporates links to font software which is the valuable copyrighted
+property of Monotype Imaging and/or its suppliers. You may not attempt to copy, install,
+redistribute, convert, modify or reverse engineer this font software. Please contact Monotype
+Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
+*/`,
+      trackerScript: `var MTUserId='45598d34-f9ee-4364-821c-4e59d75d6a87';
+var MTFontIds = new Array();
+
+MTFontIds.push("1289922"); // Anodyne W01 Shadow${' '}
+(function() {
+var mtTracking = document.createElement('script');
+mtTracking.type='text/javascript';
+mtTracking.async='true';
+mtTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.fonts.net/lt/trackingCode.js';
+
+(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(mtTracking);
+})();`,
+    });
+  });
+
   it('returns output dir', () => {
     expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
   });

@@ -114,6 +114,7 @@ module.exports.createFontSquirrelMeta = async (srcDir) => {
 
   /** @type {IFontMeta} */
   const data = {
+    code: {},
     dir: srcDir,
     files,
     font,

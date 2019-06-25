@@ -37,6 +37,25 @@ describe('Fonts.com including multi fonts', () => {
     expect(metaList.length).to.be.eq(1);
   });
 
+  it('creates code data', () => {
+    expect(metaList[0].code).to.be.eql({
+      licenseText: `/*
+This CSS resource incorporates links to font software which is the valuable copyrighted
+property of Monotype Imaging and/or its suppliers. You may not attempt to copy, install,
+redistribute, convert, modify or reverse engineer this font software. Please contact Monotype
+Imaging with any questions regarding Web Fonts:  http://www.fonts.com
+*/`,
+      trackerScript: `var MTIProjectId='7ad13684-41cd-459b-8ce8-7422db979b11';
+ (function() {
+        var mtiTracking = document.createElement('script');
+        mtiTracking.type='text/javascript';
+        mtiTracking.async='true';
+         mtiTracking.src='mtiFontTrackingCode.js';
+        (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild( mtiTracking );
+   })();`,
+    });
+  });
+
   it('returns output dir', () => {
     expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
   });

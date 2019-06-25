@@ -162,6 +162,50 @@ function findFilesByExtension (dir, extension) {
 module.exports.findFilesByExtension = findFilesByExtension;
 
 /**
+ * @param {string} source
+ * @param {string} startTag
+ * @param {string} endTag
+ */
+function pickUpSimpleTagContent (source, startTag, endTag) {
+  const startTagIndex = source.indexOf(startTag);
+  if (startTagIndex < 0) {
+    throw new Error('Start tag is not found');
+  }
+
+  const startIndex = startTagIndex + startTag.length;
+  const endIndex = source.indexOf(endTag, startIndex);
+  if (endIndex < 0) {
+    throw new Error('End tag is not found');
+  }
+
+  const text = source.slice(startIndex, endIndex)
+    .replace(/\r\n/g, '\n')
+    .trim();
+  return text;
+}
+module.exports.pickUpSimpleTagContent = pickUpSimpleTagContent;
+
+/**
+ * @param {string} dir
+ * @returns {Promise<{ licenseText?: string; trackerScript: string; }>}
+ */
+async function pickUpMonotypeCodeData (dir) {
+  const html = await readText(path.join(dir, 'demo-async.htm'));
+  const licenseText = pickUpSimpleTagContent(
+    html,
+    '<pre>',
+    '</pre>',
+  );
+  const trackerScript = pickUpSimpleTagContent(
+    html,
+    '<script type="text/javascript">',
+    '</script>',
+  );
+  return { licenseText, trackerScript };
+}
+module.exports.pickUpMonotypeCodeData = pickUpMonotypeCodeData;
+
+/**
  * @param {any[]} args
  */
 function verboseLog (...args) {

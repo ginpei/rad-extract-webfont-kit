@@ -103,6 +103,10 @@ interface IKitCode {
 }
 
 interface IFontMeta {
+  code: {
+    licenseText?: string;
+    trackerScript?: string;
+  };
   dir: string;
   files: string[];
   font: Font;
