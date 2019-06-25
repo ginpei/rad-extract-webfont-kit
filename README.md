@@ -55,3 +55,23 @@ DOWNLOAD_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx npm run download-test-assets
 ```console
 npm run test
 ```
+
+### Try in production development
+
+Use `npm link` to use this directory from your project.
+
+- [npm-link | npm Documentation](https://docs.npmjs.com/cli/link.html)
+
+Step 1/2: In this directory, create a link:
+
+```console
+$ npm link
+```
+
+Step 2/2: In the directory of your project where you use this lib:
+
+```console
+$ npm link @ginpei/rad-extract-webfont-kit
+```
+
+Now `require('@ginpei/rad-extract-webfont-kit')` imports this working directory instead of the things downloaded from npm.
