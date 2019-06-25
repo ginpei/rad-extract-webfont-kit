@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server",
     "download-test-assets": "node scripts/download-test-assets",
-    "lint": "eslint .",
+    "lint": "eslint ./*.js src",
     "test": "mocha test/setup.js  test",
     "type-check": "tsc"
   },
