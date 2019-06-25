@@ -7,7 +7,7 @@
     "dev": "nodemon server",
     "download-test-assets": "node scripts/download-test-assets",
     "lint": "eslint ./*.js src test",
-    "test": "mocha test/setup.js  test",
+    "test": "mocha --recursive test/setup.js test",
     "type-check": "tsc"
   },
   "dependencies": {
