@@ -7,20 +7,24 @@ const misc = require('../misc');
  * @param {string} srcDir
  * @returns {Promise<boolean>}
  */
-module.exports.isLinotype = (srcDir) => new Promise((resolve) => {
-  const filePath = path.join(srcDir, 'demo-async.htm');
-
+module.exports.isLinotype = (srcDir) => new Promise((resolve, reject) => {
   try {
-    fs.accessSync(filePath, fs.constants.F_OK);
+    const filePath = path.join(srcDir, 'demo-async.htm');
+
+    try {
+      fs.accessSync(filePath, fs.constants.F_OK);
+    } catch (error) {
+      resolve(false);
+      return;
+    }
+
+    const text = fs.readFileSync(filePath, 'utf8');
+    const result = text.includes('<h1 class="demo">Linotype.com Web Fonts</h1>');
+
+    resolve(result);
   } catch (error) {
-    resolve(false);
-    return;
+    reject(error);
   }
-
-  const text = fs.readFileSync(filePath, 'utf8');
-  const result = text.includes('<h1 class="demo">Linotype.com Web Fonts</h1>');
-
-  resolve(result);
 });
 
 /**

@@ -7,21 +7,26 @@ const misc = require('../misc');
  * @param {string} srcDir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontSquirrel = (srcDir) => {
-  const filePath = path.join(srcDir, 'generator_config.txt');
-
+module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
   try {
-    fs.accessSync(filePath, fs.constants.F_OK);
+    const filePath = path.join(srcDir, 'generator_config.txt');
+
+    try {
+      fs.accessSync(filePath, fs.constants.F_OK);
+    } catch (error) {
+      resolve(false);
+      return;
+    }
+
+    const text = fs.readFileSync(filePath, 'utf8');
+    const startText = '# Font Squirrel Font-face Generator Configuration File';
+    const result = text.startsWith(startText);
+
+    resolve(result);
   } catch (error) {
-    return Promise.resolve(false);
+    reject(error);
   }
-
-  const text = fs.readFileSync(filePath, 'utf8');
-  const startText = '# Font Squirrel Font-face Generator Configuration File';
-  const result = text.startsWith(startText);
-
-  return Promise.resolve(result);
-};
+});
 
 /**
  * @param {string} dir

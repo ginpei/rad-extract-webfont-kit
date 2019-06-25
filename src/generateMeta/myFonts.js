@@ -10,20 +10,24 @@ const htmlFileName = 'MyFontsWebfontsKit/StartHere.html';
  * @param {string} srcDir
  * @returns {Promise<boolean>}
  */
-module.exports.isMyFonts = (srcDir) => new Promise(async (resolve) => {
-  const filePath = path.join(srcDir, cssFileName);
-
+module.exports.isMyFonts = (srcDir) => new Promise(async (resolve, reject) => {
   try {
-    fs.accessSync(filePath, fs.constants.F_OK);
+    const filePath = path.join(srcDir, cssFileName);
+
+    try {
+      fs.accessSync(filePath, fs.constants.F_OK);
+    } catch (error) {
+      resolve(false);
+      return;
+    }
+
+    const text = await misc.readText(filePath);
+    const result = text.includes('MyFonts Webfont Build ID');
+
+    resolve(result);
   } catch (error) {
-    resolve(false);
-    return;
+    reject(error);
   }
-
-  const text = await misc.readText(filePath);
-  const result = text.includes('MyFonts Webfont Build ID');
-
-  resolve(result);
 });
 
 /**
