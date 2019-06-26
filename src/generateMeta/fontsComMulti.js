@@ -107,10 +107,12 @@ function createVariations (kitFonts) {
 }
 
 /**
+ * @param {string} dir
  * @param {FontsComXmlRecord[]} kitFonts
- * @returns {Font}
  */
-function createFont (kitFonts) {
+async function createFont (dir, kitFonts) {
+  const code = await misc.pickUpMonotypeCodeData(dir);
+
   /** @type {Font} */
   const font = {
     displayName: kitFonts[0].familyName,
@@ -122,6 +124,10 @@ function createFont (kitFonts) {
       height: '25px',
       src: '',
       top: 0,
+    },
+    import: {
+      code,
+      urlBase: '',
     },
     selectedVariation: undefined,
     variations: createVariations(kitFonts),
@@ -137,15 +143,11 @@ function createFont (kitFonts) {
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
 
-  const code = await misc.pickUpMonotypeCodeData(srcDir);
-
   /** @type {IFontMeta} */
   const data = {
-    code,
     dir: srcDir,
     files: buildFileData(kitFonts),
-    font: createFont(kitFonts),
-    provider: 'fonts.com',
+    font: await createFont(srcDir, kitFonts),
   };
   resolve([data]);
 });

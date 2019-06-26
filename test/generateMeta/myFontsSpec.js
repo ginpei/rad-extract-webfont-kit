@@ -40,9 +40,26 @@ describe('with a kit from MyFonts', () => {
     expect(metaList.length).to.be.eq(1);
   });
 
-  it('creates code data', () => {
-    expect(metaList[0].code).to.be.eql({
-      licenseText: `/**
+  it('returns output dir', () => {
+    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+  });
+
+  it('creates font data', () => {
+    /** @type {Font} */
+    const expected = {
+      displayName: 'Quire Sans Extra Light Italic',
+      fontFamily: 'QuireSansW04-ExtraLightIt',
+      fontProvider: 'myfonts',
+      fontProviderWebSite: 'myfonts.com',
+      fontType: 'upload',
+      image: {
+        height: '25px',
+        src: '',
+        top: 0,
+      },
+      import: {
+        code: {
+          licenseText: `/**
  * @license
  * MyFonts Webfont Build ID 2853875, 2014-07-28T13:44:50-0400
  *${' '}
@@ -62,25 +79,8 @@ describe('with a kit from MyFonts', () => {
  *${' '}
  * © 2014 MyFonts Inc
 */`,
-    });
-  });
-
-  it('returns output dir', () => {
-    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
-  });
-
-  it('creates font data', () => {
-    /** @type {Font} */
-    const expected = {
-      displayName: 'Quire Sans Extra Light Italic',
-      fontFamily: 'QuireSansW04-ExtraLightIt',
-      fontProvider: 'myfonts',
-      fontProviderWebSite: 'myfonts.com',
-      fontType: 'upload',
-      image: {
-        height: '25px',
-        src: '',
-        top: 0,
+        },
+        urlBase: '',
       },
       selectedVariation: undefined,
       variations: [
@@ -101,9 +101,5 @@ describe('with a kit from MyFonts', () => {
       'webfonts/2B8BF3_0_0.ttf',
     ];
     expect(metaList[0].files).to.be.eql(expected);
-  });
-
-  it('sets font provider', () => {
-    expect(metaList[0].provider).to.be.eq('myfonts');
   });
 });

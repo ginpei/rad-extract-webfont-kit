@@ -40,25 +40,6 @@ describe('fontsCom', () => {
     expect(metaList.length).to.be.eq(1);
   });
 
-  it('creates code data', () => {
-    expect(metaList[0].code).to.be.eql({
-      licenseText: `/*
-This CSS resource incorporates links to font software which is the valuable copyrighted
-property of Monotype Imaging and/or its suppliers. You may not attempt to copy, install,
-redistribute, convert, modify or reverse engineer this font software. Please contact Monotype
-Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
-*/`,
-      trackerScript: `var MTIProjectId='6fc2ae63-066d-4f3c-84da-3076aa2d1b6c';
- (function() {
-        var mtiTracking = document.createElement('script');
-        mtiTracking.type='text/javascript';
-        mtiTracking.async='true';
-        mtiTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.fonts.net/t/trackingCode.js';
-        (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild( mtiTracking );
-   })();`,
-    });
-  });
-
   it('returns output dir', () => {
     expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
   });
@@ -75,6 +56,25 @@ Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
         height: '25px',
         src: '',
         top: 0,
+      },
+      import: {
+        code: {
+          licenseText: `/*
+This CSS resource incorporates links to font software which is the valuable copyrighted
+property of Monotype Imaging and/or its suppliers. You may not attempt to copy, install,
+redistribute, convert, modify or reverse engineer this font software. Please contact Monotype
+Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
+*/`,
+          trackerScript: `var MTIProjectId='6fc2ae63-066d-4f3c-84da-3076aa2d1b6c';
+ (function() {
+        var mtiTracking = document.createElement('script');
+        mtiTracking.type='text/javascript';
+        mtiTracking.async='true';
+        mtiTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.fonts.net/t/trackingCode.js';
+        (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild( mtiTracking );
+   })();`,
+        },
+        urlBase: '',
       },
       selectedVariation: undefined,
       variations: [
@@ -96,9 +96,5 @@ Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
       'Fonts/92ab452d-729a-46ce-b8dc-cf2cb5146c7a.svg',
     ];
     expect(metaList[0].files).to.be.eql(expected);
-  });
-
-  it('sets font provider', () => {
-    expect(metaList[0].provider).to.be.eq('fonts.com');
   });
 });

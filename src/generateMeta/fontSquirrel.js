@@ -76,6 +76,10 @@ async function buildFontData (fontFaceRule, dir) {
       src: '',
       top: 0,
     },
+    import: {
+      code: {},
+      urlBase: '',
+    },
     selectedVariation: undefined,
     variations: [
       {
@@ -114,11 +118,9 @@ module.exports.createFontSquirrelMeta = async (srcDir) => {
 
   /** @type {IFontMeta} */
   const data = {
-    code: {},
     dir: srcDir,
     files,
     font,
-    provider: 'fontsquirrel.com',
   };
   return [data];
 };

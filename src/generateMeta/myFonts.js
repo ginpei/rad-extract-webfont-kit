@@ -81,6 +81,7 @@ async function buildFontData (fontFaceRule, dir) {
   }
 
   const displayName = await getDisplayName(dir, fontFamily);
+  const code = await buildCodeData(dir);
 
   /** @type {Font} */
   const font = {
@@ -93,6 +94,10 @@ async function buildFontData (fontFaceRule, dir) {
       height: '25px',
       src: '',
       top: 0,
+    },
+    import: {
+      code,
+      urlBase: '',
     },
     selectedVariation: undefined,
     variations: [
@@ -127,17 +132,14 @@ module.exports.createMyFontsMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, cssFileName);
   const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
-  const code = await buildCodeData(srcDir);
   const files = getFilePaths(fontFaceRule);
   const font = await buildFontData(fontFaceRule, srcDir);
 
   /** @type {IFontMeta} */
   const data = {
-    code,
     dir: srcDir,
     files,
     font,
-    provider: 'myfonts',
   };
   return [data];
 };

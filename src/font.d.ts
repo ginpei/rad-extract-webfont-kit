@@ -97,6 +97,13 @@ interface Font {
     src: string;
     top: number;
   };
+  import?: {
+    code: {
+      licenseText?: string;
+      trackerScript?: string;
+    };
+    urlBase: string;
+  };
   monotypeVariationId?: string; // TODO maybe the default?
   selectedVariation?: FontVariation; // added in `selectFontVariation()`
   variations: FontVariation[];

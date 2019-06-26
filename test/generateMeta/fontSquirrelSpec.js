@@ -40,10 +40,6 @@ describe('with a kit from FontSquirrel.com', () => {
       expect(metaList.length).to.be.eq(1);
     });
 
-    it('creates code data', () => {
-      expect(metaList[0].code).to.be.eql({});
-    });
-
     it('returns output dir', () => {
       expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
     });
@@ -60,6 +56,10 @@ describe('with a kit from FontSquirrel.com', () => {
           height: '25px',
           src: '',
           top: 0,
+        },
+        import: {
+          code: {},
+          urlBase: '',
         },
         selectedVariation: undefined,
         variations: [
@@ -80,10 +80,6 @@ describe('with a kit from FontSquirrel.com', () => {
         'interstate-light-webfont.woff',
       ];
       expect(metaList[0].files).to.be.eql(expected);
-    });
-
-    it('sets font provider', () => {
-      expect(metaList[0].provider).to.be.eq('fontsquirrel.com');
     });
   });
 
