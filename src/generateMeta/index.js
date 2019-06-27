@@ -9,6 +9,11 @@ const {
 } = require('./fontsCom');
 
 const {
+  createFontShopMeta,
+  isFontShop,
+} = require('./fontShop');
+
+const {
   createFontSquirrelMeta,
   isFontSquirrel,
 } = require('./fontSquirrel');
@@ -35,6 +40,10 @@ module.exports = async (dir) => {
 
   if (await isFontsCom(dir)) {
     return createFontsComMeta(dir);
+  }
+
+  if (await isFontShop(dir)) {
+    return createFontShopMeta(dir);
   }
 
   if (await isFontSquirrel(dir)) {

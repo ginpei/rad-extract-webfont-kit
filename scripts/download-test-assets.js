@@ -7,7 +7,7 @@ const urlPrefix = 'https://s3-us-west-2.amazonaws.com/ginpei.hey.yo/rad-extract-
 const files = [
   'fontscom-multi.zip',
   'fontscom.zip',
-  'fontshop.zip',
+  'fontshop-multiFamilies.zip',
   'fontsquirrel.zip',
   'linotype.zip',
   'myfonts.zip',

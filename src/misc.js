@@ -35,6 +35,44 @@ function readText (filePath) {
 module.exports.readText = readText;
 
 /**
+ * @param {string} filePath
+ * @param {string} text
+ * @returns {Promise<string>}
+ */
+function writeText (filePath, text) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filePath, text, 'utf8', (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve();
+    });
+  });
+}
+module.exports.writeText = writeText;
+
+/**
+ * @param {import("fs").PathLike} dir
+ * @returns {Promise<string[]>}
+ */
+function findSubDirs (dir) {
+  return new Promise((resolve, reject) => {
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      const dirNames = entries
+        .filter((v) => v.isDirectory())
+        .map((v) => v.name);
+      resolve(dirNames);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+module.exports.findSubDirs = findSubDirs;
+
+/**
  * @param {import("fs").PathLike} dir
  * @param {string} extension
  * @returns {Promise<string[]>}
