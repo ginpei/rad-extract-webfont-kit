@@ -3,7 +3,6 @@ const path = require('path');
 const yauzl = require('yauzl');
 const misc = require('./misc');
 
-
 /**
  * @param {string} zipPath
  * @returns {Promise<yauzl.ZipFile>}
