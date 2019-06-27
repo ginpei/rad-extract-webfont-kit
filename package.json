@@ -1,6 +1,6 @@
 {
   "name": "@ginpei/rad-extract-webfont-kit",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "homepage": "https://github.com/ginpei/rad-extract-webfont-kit",
   "main": "src/index.js",
   "scripts": {
