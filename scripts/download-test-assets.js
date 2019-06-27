@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const path = require('path');
+const misc = require('../src/misc');
 
 const outDir = path.join(__dirname, '../test/assets');
 const urlPrefix = 'https://s3-us-west-2.amazonaws.com/ginpei.hey.yo/rad-extract-webfont-kit/test-assets/';
@@ -11,23 +12,6 @@ const files = [
   'linotype.zip',
   'myfonts.zip',
 ];
-
-/**
- * @param {string} dir
- */
-function prepareDir (dir) {
-  return new Promise((resolve, reject) => {
-    const command = `mkdir -p ${dir}`;
-    exec(command, (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve();
-    });
-  });
-}
 
 /**
  * @param {string} fileName
@@ -64,7 +48,7 @@ async function main () {
     throw new Error('DOWNLOAD_KEY must be set');
   }
 
-  prepareDir(outDir);
+  misc.prepareDir(outDir);
 
   for (let i = 0; i < files.length; i += 1) {
     const fileName = files[i];

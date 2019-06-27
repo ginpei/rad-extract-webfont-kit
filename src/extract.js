@@ -1,22 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const yauzl = require('yauzl');
-const { verboseLog } = require('./misc');
-
-/**
- * @param {string} dirPath
- */
-function prepareDir (dirPath) {
-  const dirNames = dirPath.split('/').reverse();
-  let curPath = '';
-  while (dirNames.length > 0) {
-    curPath += `${dirNames.pop()}/`;
-    if (!fs.existsSync(curPath)) {
-      fs.mkdirSync(curPath);
-    }
-  }
-}
-module.exports.prepareDir = prepareDir;
+const misc = require('./misc');
 
 
 /**
@@ -75,7 +60,7 @@ function extractEntry (zipFile, entry, dest) {
     const { fileName } = entry;
 
     const dir = path.join(dest, path.dirname(fileName));
-    prepareDir(dir);
+    misc.prepareDir(dir);
 
     zipFile.openReadStream(entry, (err, readStream) => {
       if (err) {
@@ -114,7 +99,7 @@ module.exports = async (src, dest) => {
       return Promise.resolve();
     }
 
-    verboseLog('extract...', entry.fileName);
+    misc.verboseLog('extract...', entry.fileName);
     filePaths.push(entry.fileName);
     return extractEntry(zipFile, entry, dest);
   });
