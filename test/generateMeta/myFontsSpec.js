@@ -86,6 +86,7 @@ describe('with a kit from MyFonts', () => {
         },
         urlBase: '',
       },
+      kitVersion: '2014',
       selectedVariation: undefined,
       variations: [
         {

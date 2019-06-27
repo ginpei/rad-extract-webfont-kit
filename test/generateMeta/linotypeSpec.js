@@ -84,6 +84,7 @@ mtTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.f
         },
         urlBase: '',
       },
+      kitVersion: '0',
       selectedVariation: undefined,
       variations: [
         {

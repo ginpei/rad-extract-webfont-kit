@@ -69,6 +69,7 @@ async function createOneMeta (srcDir, subDir, fileName) {
       code: {},
       urlBase: '',
     },
+    kitVersion: '2013',
     selectedVariation: undefined,
     variations: [
       {

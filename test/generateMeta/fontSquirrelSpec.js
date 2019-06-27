@@ -65,6 +65,7 @@ describe('with a kit from FontSquirrel.com', () => {
           code: {},
           urlBase: '',
         },
+        kitVersion: '2017',
         selectedVariation: undefined,
         variations: [
           {

@@ -99,6 +99,7 @@ async function buildFontData (fontFaceRule, dir) {
       code,
       urlBase: '',
     },
+    kitVersion: '2014',
     selectedVariation: undefined,
     variations: [
       {

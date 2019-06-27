@@ -80,6 +80,7 @@ Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
         },
         urlBase: '',
       },
+      kitVersion: '0',
       selectedVariation: undefined,
       variations: [
         {

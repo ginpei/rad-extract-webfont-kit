@@ -134,6 +134,7 @@ async function createFont (dir, kitFonts) {
       code,
       urlBase: '',
     },
+    kitVersion: '0',
     selectedVariation: undefined,
     variations: createVariations(kitFonts),
   };

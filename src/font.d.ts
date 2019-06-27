@@ -104,6 +104,7 @@ interface Font {
     };
     urlBase: string;
   };
+  kitVersion?: string;
   monotypeVariationId?: string; // TODO maybe the default?
   selectedVariation?: FontVariation; // added in `selectFontVariation()`
   variations: FontVariation[];

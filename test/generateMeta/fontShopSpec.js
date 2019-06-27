@@ -66,6 +66,7 @@ describe('fontShop', () => {
           code: {},
           urlBase: '',
         },
+        kitVersion: '2013',
         selectedVariation: undefined,
         variations: [
           {

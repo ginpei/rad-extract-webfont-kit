@@ -76,6 +76,7 @@ async function buildFontData (fontFaceRule, dir) {
       code,
       urlBase: '',
     },
+    kitVersion: '0',
     selectedVariation: undefined,
     variations: [
       {
