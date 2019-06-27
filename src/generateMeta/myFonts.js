@@ -115,9 +115,11 @@ async function buildFontData (fontFaceRule, dir) {
  * @returns {string[]}
  */
 function getFilePaths (fontFaceRule) {
+  const fontPaths = css.getFontFilePaths(fontFaceRule)
+    .map((v) => `MyFontsWebfontsKit/${v}`);
   const pathList = [
     cssFileName,
-    ...css.getFontFilePaths(fontFaceRule),
+    ...fontPaths,
   ];
   return pathList;
 }

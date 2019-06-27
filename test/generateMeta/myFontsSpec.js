@@ -96,9 +96,9 @@ describe('with a kit from MyFonts', () => {
   it('creates import files data', () => {
     const expected = [
       'MyFontsWebfontsKit/MyFontsWebfontsKit.css',
-      'webfonts/2B8BF3_0_0.eot',
-      'webfonts/2B8BF3_0_0.woff',
-      'webfonts/2B8BF3_0_0.ttf',
+      'MyFontsWebfontsKit/webfonts/2B8BF3_0_0.eot',
+      'MyFontsWebfontsKit/webfonts/2B8BF3_0_0.woff',
+      'MyFontsWebfontsKit/webfonts/2B8BF3_0_0.ttf',
     ];
     expect(metaList[0].files).to.be.eql(expected);
   });
