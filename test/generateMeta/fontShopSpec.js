@@ -54,7 +54,7 @@ describe('fontShop', () => {
       const expected = {
         displayName: 'Dr Carbfred',
         fontFamily: 'DrCarbfred',
-        fontProvider: 'fontshop',
+        fontProvider: 'FontShop',
         fontProviderWebSite: 'fontshop.com',
         fontType: 'upload',
         image: {

@@ -53,7 +53,7 @@ describe('Linotype', () => {
     const expected = {
       displayName: 'Anodyne W01 Shadow',
       fontFamily: 'Anodyne W01 Shdw',
-      fontProvider: 'linotype',
+      fontProvider: 'Linotype',
       fontProviderWebSite: 'linotype.com',
       fontType: 'upload',
       image: {

@@ -53,7 +53,7 @@ describe('with a kit from FontSquirrel.com', () => {
       const expected = {
         displayName: 'Interstate-Light Regular',
         fontFamily: 'interstatelight',
-        fontProvider: 'fontsquirrel.com',
+        fontProvider: 'Font Squirrel',
         fontProviderWebSite: 'fontsquirrel.com',
         fontType: 'upload',
         image: {

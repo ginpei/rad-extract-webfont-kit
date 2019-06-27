@@ -68,7 +68,7 @@ async function buildFontData (fontFaceRule, dir) {
   const font = {
     displayName,
     fontFamily,
-    fontProvider: 'linotype',
+    fontProvider: 'Linotype',
     fontProviderWebSite: 'linotype.com',
     fontType: 'upload',
     image: {

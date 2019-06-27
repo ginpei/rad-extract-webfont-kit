@@ -53,7 +53,7 @@ describe('fontsCom', () => {
     const expected = {
       displayName: 'ITC Tabula™ W01 Book',
       fontFamily: 'Tabula ITC W01 Book',
-      fontProvider: 'fonts.com',
+      fontProvider: 'Fonts.com',
       fontProviderWebSite: 'fonts.com',
       fontType: 'upload',
       image: {

@@ -87,7 +87,7 @@ async function buildFontData (fontFaceRule, dir) {
   const font = {
     displayName,
     fontFamily,
-    fontProvider: 'myfonts',
+    fontProvider: 'MyFonts',
     fontProviderWebSite: 'myfonts.com',
     fontType: 'upload',
     image: {

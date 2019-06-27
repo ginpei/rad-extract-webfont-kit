@@ -57,7 +57,7 @@ async function createOneMeta (srcDir, subDir, fileName) {
   const font = {
     displayName,
     fontFamily,
-    fontProvider: 'fontshop',
+    fontProvider: 'FontShop',
     fontProviderWebSite: 'fontshop.com',
     fontType: 'upload',
     image: {

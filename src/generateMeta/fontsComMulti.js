@@ -122,7 +122,7 @@ async function createFont (dir, kitFonts) {
   const font = {
     displayName: kitFonts[0].familyName,
     fontFamily: kitFonts[0].familyName,
-    fontProvider: 'fonts.com',
+    fontProvider: 'Fonts.com',
     fontProviderWebSite: 'fonts.com',
     fontType: 'upload',
     image: {

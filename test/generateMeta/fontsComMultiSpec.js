@@ -50,7 +50,7 @@ describe('Fonts.com including multi fonts', () => {
     const expected = {
       displayName: 'Toyota Type',
       fontFamily: 'Toyota Type',
-      fontProvider: 'fonts.com',
+      fontProvider: 'Fonts.com',
       fontProviderWebSite: 'fonts.com',
       fontType: 'upload',
       image: {

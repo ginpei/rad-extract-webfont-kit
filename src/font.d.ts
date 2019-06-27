@@ -177,7 +177,13 @@ interface FontLambda {
 }
 
 type FontType = 'standard' | 'upload' | 'premium';
-type FontProvider = 'google' | 'fonts.com' | 'fontshop' | 'fontsquirrel.com' | 'linotype' | 'myfonts';
+type FontProvider =
+  | 'google' // TODO replace with 'Google Fonts'
+  | 'Fonts.com'
+  | 'FontShop'
+  | 'Font Squirrel'
+  | 'Linotype'
+  | 'MyFonts';
 type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 type FontStyle = 'normal' | 'italic' | 'oblique';
 type FontStretch = 'normal' | 'condensed' | 'semi-condensed' |

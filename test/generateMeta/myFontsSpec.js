@@ -53,7 +53,7 @@ describe('with a kit from MyFonts', () => {
     const expected = {
       displayName: 'Quire Sans Extra Light Italic',
       fontFamily: 'QuireSansW04-ExtraLightIt',
-      fontProvider: 'myfonts',
+      fontProvider: 'MyFonts',
       fontProviderWebSite: 'myfonts.com',
       fontType: 'upload',
       image: {
