@@ -59,7 +59,7 @@ async function getDisplayName (dir, fontFamily) {
  * @param {string} dir
  */
 async function buildCodeData (dir) {
-  const html = await misc.readText(path.join(dir, 'MyFontsWebfontsKit/StartHere.html'));
+  const html = await misc.readText(path.join(dir, htmlFileName));
   const licenseText = misc.pickUpSimpleTagContent(
     html,
     '<!--',
