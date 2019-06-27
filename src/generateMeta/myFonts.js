@@ -3,13 +3,16 @@ const path = require('path');
 const css = require('../css');
 const misc = require('../misc');
 
+const cssFileName = 'MyFontsWebfontsKit/MyFontsWebfontsKit.css';
+const htmlFileName = 'MyFontsWebfontsKit/StartHere.html';
+
 /**
  * @param {string} srcDir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
+module.exports.isMyFonts = (srcDir) => new Promise(async (resolve, reject) => {
   try {
-    const filePath = path.join(srcDir, 'generator_config.txt');
+    const filePath = path.join(srcDir, cssFileName);
 
     try {
       fs.accessSync(filePath, fs.constants.F_OK);
@@ -18,9 +21,8 @@ module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
       return;
     }
 
-    const text = fs.readFileSync(filePath, 'utf8');
-    const startText = '# Font Squirrel Font-face Generator Configuration File';
-    const result = text.startsWith(startText);
+    const text = await misc.readText(filePath);
+    const result = text.includes('MyFonts Webfont Build ID');
 
     resolve(result);
   } catch (error) {
@@ -30,18 +32,20 @@ module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
 
 /**
  * @param {string} dir
+ * @param {string} fontFamily
  * @returns {Promise<string>}
  */
-async function getDisplayName (dir) {
-  const startTag = '<div id="header">';
-  const endTag = '</div>';
+async function getDisplayName (dir, fontFamily) {
+  // Expect such HTML:
+  // <span class="QuireSansW04-ExtraLightIt" contenteditable="true">
+  //   Quire Sans Extra Light Italic
+  // </span>
 
-  // assume there is only 1 HTML file
-  const [htmlPath] = await misc.findFilesByExtension(dir, '.html');
-  if (!htmlPath) {
-    throw new Error('Kit must contains an HTML file to parse');
-  }
-  const html = await misc.readText(path.join(dir, htmlPath));
+  const startTag = `<span class="${fontFamily}" contenteditable="true">`;
+  const endTag = '</span>';
+
+  const htmlFilePath = path.join(dir, htmlFileName);
+  const html = await misc.readText(htmlFilePath);
 
   const startsAt = html.indexOf(startTag) + startTag.length;
   const endsAt = html.indexOf(endTag, startsAt);
@@ -49,6 +53,20 @@ async function getDisplayName (dir) {
 
   const displayName = content.trim();
   return displayName;
+}
+
+/**
+ * @param {string} dir
+ */
+async function buildCodeData (dir) {
+  const html = await misc.readText(path.join(dir, htmlFileName));
+  const licenseText = misc.pickUpSimpleTagContent(
+    html,
+    '<!--',
+    '-->',
+  );
+
+  return { licenseText };
 }
 
 /**
@@ -62,14 +80,15 @@ async function buildFontData (fontFaceRule, dir) {
     throw new Error('Font-family must be set');
   }
 
-  const displayName = await getDisplayName(dir);
+  const displayName = await getDisplayName(dir, fontFamily);
+  const code = await buildCodeData(dir);
 
   /** @type {Font} */
   const font = {
     displayName,
     fontFamily,
-    fontProvider: 'Font Squirrel',
-    fontProviderWebSite: 'fontsquirrel.com',
+    fontProvider: 'MyFonts',
+    fontProviderWebSite: 'myfonts.com',
     fontType: 'upload',
     image: {
       height: '25px',
@@ -77,10 +96,10 @@ async function buildFontData (fontFaceRule, dir) {
       top: 0,
     },
     import: {
-      code: {},
+      code,
       urlBase: '',
     },
-    kitVersion: '2017',
+    kitVersion: '2014',
     selectedVariation: undefined,
     variations: [
       {
@@ -97,9 +116,11 @@ async function buildFontData (fontFaceRule, dir) {
  * @returns {string[]}
  */
 function getFilePaths (fontFaceRule) {
+  const fontPaths = css.getFontFilePaths(fontFaceRule)
+    .map((v) => `MyFontsWebfontsKit/${v}`);
   const pathList = [
-    'stylesheet.css',
-    ...css.getFontFilePaths(fontFaceRule),
+    cssFileName,
+    ...fontPaths,
   ];
   return pathList;
 }
@@ -110,8 +131,8 @@ function getFilePaths (fontFaceRule) {
  * @returns {Promise<IFontMeta[]>}
  */
 // eslint-disable-next-line arrow-body-style
-module.exports.createFontSquirrelMeta = async (srcDir) => {
-  const cssFilePath = path.join(srcDir, 'stylesheet.css');
+module.exports.createMyFontsMeta = async (srcDir) => {
+  const cssFilePath = path.join(srcDir, cssFileName);
   const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
   const files = getFilePaths(fontFaceRule);

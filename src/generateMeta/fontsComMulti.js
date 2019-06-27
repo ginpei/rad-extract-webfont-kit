@@ -2,12 +2,21 @@
 const fs = require('fs');
 const parser = require('fast-xml-parser');
 const path = require('path');
+const misc = require('../misc');
 
 /**
  * @param {string} dir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontsComMulti = (dir) => Promise.resolve(fs.existsSync(path.join(dir, 'fontlist.xml')));
+module.exports.isFontsComMulti = (dir) => new Promise((resolve) => {
+  try {
+    const filePath = path.join(dir, 'fontlist.xml');
+    fs.accessSync(filePath, fs.constants.F_OK);
+    resolve(true);
+  } catch (error) {
+    resolve(false);
+  }
+});
 
 /**
  * @param {string} srcDir
@@ -24,20 +33,25 @@ function readFontsComXml (srcDir) {
   const data = parser.parse(xml, options);
 
   /** @type {FontsComXmlRecord[]} */
-  const fonts = data.fonts.font.map((font) => ({
-    cssFamilyName: font.CssFamilyName,
-    displayName: font.displayName,
-    eot: path.join('Fonts/', font.eot),
-    familyName: font.FamilyName,
-    fontStretch: font.FontStretch,
-    fontStyle: font.FontStyle,
-    fontWeight: font.FontWeight,
-    psName: font.psName,
-    svg: path.join('Fonts/', font.svg),
-    ttf: path.join('Fonts/', font.ttf),
-    woff: path.join('Fonts/', font.woff),
-    woff2: path.join('Fonts/', font.woff2),
-  }));
+  const fonts = data.fonts.font.map(
+    /**
+     * @param {any} font
+     */
+    (font) => ({
+      cssFamilyName: font.CssFamilyName,
+      displayName: font.displayName,
+      eot: path.join('Fonts/', font.eot),
+      familyName: font.FamilyName,
+      fontStretch: font.FontStretch,
+      fontStyle: font.FontStyle,
+      fontWeight: font.FontWeight,
+      psName: font.psName,
+      svg: path.join('Fonts/', font.svg),
+      ttf: path.join('Fonts/', font.ttf),
+      woff: path.join('Fonts/', font.woff),
+      woff2: path.join('Fonts/', font.woff2),
+    }),
+  );
   return fonts;
 }
 
@@ -91,7 +105,6 @@ function createVariations (kitFonts) {
     const variation = {
       displayName,
       fontFamily: font.cssFamilyName,
-      monotypeVariationId: '',
     };
     return variation;
   });
@@ -99,23 +112,29 @@ function createVariations (kitFonts) {
 }
 
 /**
+ * @param {string} dir
  * @param {FontsComXmlRecord[]} kitFonts
- * @returns {Font}
  */
-function createFont (kitFonts) {
+async function createFont (dir, kitFonts) {
+  const code = await misc.pickUpMonotypeCodeData(dir);
+
   /** @type {Font} */
   const font = {
     displayName: kitFonts[0].familyName,
     fontFamily: kitFonts[0].familyName,
-    fontProvider: 'fonts.com',
+    fontProvider: 'Fonts.com',
     fontProviderWebSite: 'fonts.com',
-    fontType: 'standard', // TODO optional?
+    fontType: 'upload',
     image: {
       height: '25px',
       src: '',
       top: 0,
     },
-    monotypeVariationId: '',
+    import: {
+      code,
+      urlBase: '',
+    },
+    kitVersion: '0',
     selectedVariation: undefined,
     variations: createVariations(kitFonts),
   };
@@ -125,7 +144,7 @@ function createFont (kitFonts) {
 /**
  * Parse files and create meta data file.
  * @param {string} srcDir
- * @returns {Promise<IFontMeta>}
+ * @returns {Promise<IFontMeta[]>}
  */
 module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve) => {
   const kitFonts = readFontsComXml(srcDir);
@@ -134,7 +153,7 @@ module.exports.createFontsComMultiMeta = (srcDir) => new Promise(async (resolve)
   const data = {
     dir: srcDir,
     files: buildFileData(kitFonts),
-    font: createFont(kitFonts),
+    font: await createFont(srcDir, kitFonts),
   };
-  resolve(data);
+  resolve([data]);
 });

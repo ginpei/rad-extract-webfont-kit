@@ -20,7 +20,7 @@ function generateThumbnail (dir) {
 
 /**
  * @param {IExtractKitOptions} options
- * @param {(error: Error | null, result?: IFontMeta) => void} cb
+ * @param {(error: Error | null, result?: IFontMeta[]) => void} cb
  */
 module.exports = async (options, cb) => {
   if (options.verbose) {

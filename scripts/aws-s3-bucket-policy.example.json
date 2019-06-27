@@ -1,0 +1,20 @@
+{
+  "Id": "Policy1561412036430",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1561412008339",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::ginpei.hey.yo/rad-extract-webfont-kit/test-assets/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:Referer": "https://responsiveads.com/rad-extract-webfont-kit/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "Principal": "*"
+    }
+  ]
+}

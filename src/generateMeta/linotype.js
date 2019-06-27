@@ -7,9 +7,9 @@ const misc = require('../misc');
  * @param {string} srcDir
  * @returns {Promise<boolean>}
  */
-module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
+module.exports.isLinotype = (srcDir) => new Promise((resolve, reject) => {
   try {
-    const filePath = path.join(srcDir, 'generator_config.txt');
+    const filePath = path.join(srcDir, 'demo-async.htm');
 
     try {
       fs.accessSync(filePath, fs.constants.F_OK);
@@ -19,8 +19,7 @@ module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
     }
 
     const text = fs.readFileSync(filePath, 'utf8');
-    const startText = '# Font Squirrel Font-face Generator Configuration File';
-    const result = text.startsWith(startText);
+    const result = text.includes('<h1 class="demo">Linotype.com Web Fonts</h1>');
 
     resolve(result);
   } catch (error) {
@@ -33,18 +32,18 @@ module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
  * @returns {Promise<string>}
  */
 async function getDisplayName (dir) {
-  const startTag = '<div id="header">';
-  const endTag = '</div>';
+  // Expect such HTML:
+  // <div class="fontdisplay">
+  //   <div style="font-family:'Anodyne W01 Shdw';"> Anodyne W01 Shadow </div>
+  // </div>
 
-  // assume there is only 1 HTML file
-  const [htmlPath] = await misc.findFilesByExtension(dir, '.html');
-  if (!htmlPath) {
-    throw new Error('Kit must contains an HTML file to parse');
-  }
-  const html = await misc.readText(path.join(dir, htmlPath));
+  const startTag = '<div class="fontdisplay">';
 
-  const startsAt = html.indexOf(startTag) + startTag.length;
-  const endsAt = html.indexOf(endTag, startsAt);
+  const html = await misc.readText(path.join(dir, 'demo-async.htm'));
+
+  const wrapperStartsAt = html.indexOf(startTag);
+  const startsAt = html.indexOf('>', wrapperStartsAt + startTag.length + 1) + 1;
+  const endsAt = html.indexOf('</div>', startsAt);
   const content = html.slice(startsAt, endsAt);
 
   const displayName = content.trim();
@@ -63,13 +62,14 @@ async function buildFontData (fontFaceRule, dir) {
   }
 
   const displayName = await getDisplayName(dir);
+  const code = await misc.pickUpMonotypeCodeData(dir);
 
   /** @type {Font} */
   const font = {
     displayName,
     fontFamily,
-    fontProvider: 'Font Squirrel',
-    fontProviderWebSite: 'fontsquirrel.com',
+    fontProvider: 'Linotype',
+    fontProviderWebSite: 'linotype.com',
     fontType: 'upload',
     image: {
       height: '25px',
@@ -77,10 +77,10 @@ async function buildFontData (fontFaceRule, dir) {
       top: 0,
     },
     import: {
-      code: {},
+      code,
       urlBase: '',
     },
-    kitVersion: '2017',
+    kitVersion: '0',
     selectedVariation: undefined,
     variations: [
       {
@@ -98,7 +98,7 @@ async function buildFontData (fontFaceRule, dir) {
  */
 function getFilePaths (fontFaceRule) {
   const pathList = [
-    'stylesheet.css',
+    'demo-async.css',
     ...css.getFontFilePaths(fontFaceRule),
   ];
   return pathList;
@@ -110,8 +110,8 @@ function getFilePaths (fontFaceRule) {
  * @returns {Promise<IFontMeta[]>}
  */
 // eslint-disable-next-line arrow-body-style
-module.exports.createFontSquirrelMeta = async (srcDir) => {
-  const cssFilePath = path.join(srcDir, 'stylesheet.css');
+module.exports.createLinotypeMeta = async (srcDir) => {
+  const cssFilePath = path.join(srcDir, 'demo-async.css');
   const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
 
   const files = getFilePaths(fontFaceRule);

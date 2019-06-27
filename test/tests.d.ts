@@ -1,5 +1,5 @@
 interface IRunOnTmpResult {
   error: Error | null;
-  meta: IFontMeta;
-  tmpDir: string;
+  metaList?: IFontMeta[];
+  tmpDir?: string;
 }

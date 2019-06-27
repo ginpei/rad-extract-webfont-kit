@@ -4,46 +4,58 @@ const {
 } = require('./fontsComMulti');
 
 const {
+  createFontsComMeta,
+  isFontsCom,
+} = require('./fontsCom');
+
+const {
+  createFontShopMeta,
+  isFontShop,
+} = require('./fontShop');
+
+const {
   createFontSquirrelMeta,
   isFontSquirrel,
 } = require('./fontSquirrel');
 
-/** @enum {string} */
-const KitType = {
-  fontsCom: 'fontsCom',
-  fontsComMulti: 'fontsComMulti',
-  fontSquirrelCom: 'fontSquirrelCom',
-  unknown: 'unknown',
-};
+const {
+  createLinotypeMeta,
+  isLinotype,
+} = require('./linotype');
 
-/**
- * Detect which type of webfont kit is the target.
- * @param {string} dir
- * @returns {Promise<KitType>}
- */
-async function detectKitType (dir) {
-  if (await isFontsComMulti(dir)) {
-    return KitType.fontsComMulti;
-  }
-  if (await isFontSquirrel(dir)) {
-    return KitType.fontSquirrelCom;
-  }
-
-  return KitType.unknown;
-}
+const {
+  createMyFontsMeta,
+  isMyFonts,
+} = require('./myFonts');
 
 /**
  * Generate meta data JSON file to use web fonts.
- * @param {string} srcDir
- * @returns {Promise<IFontMeta>}
+ * @param {string} dir
+ * @returns {Promise<IFontMeta[]>}
  */
-module.exports = async (srcDir) => {
-  const type = await detectKitType(srcDir);
-  if (type === KitType.fontsComMulti) {
-    return createFontsComMultiMeta(srcDir);
+module.exports = async (dir) => {
+  if (await isFontsComMulti(dir)) {
+    return createFontsComMultiMeta(dir);
   }
-  if (type === KitType.fontSquirrelCom) {
-    return createFontSquirrelMeta(srcDir);
+
+  if (await isFontsCom(dir)) {
+    return createFontsComMeta(dir);
+  }
+
+  if (await isFontShop(dir)) {
+    return createFontShopMeta(dir);
+  }
+
+  if (await isFontSquirrel(dir)) {
+    return createFontSquirrelMeta(dir);
+  }
+
+  if (await isLinotype(dir)) {
+    return createLinotypeMeta(dir);
+  }
+
+  if (await isMyFonts(dir)) {
+    return createMyFontsMeta(dir);
   }
 
   throw new Error('Unsupported type of webfont kit');

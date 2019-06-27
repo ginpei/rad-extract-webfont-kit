@@ -2,7 +2,7 @@ const extractWebfontKit = require('./src/index');
 
 const zipPath = process.argv[2];
 if (!zipPath) {
-  process.stdout.write('Usage: node a <zip-file>\n');
+  process.stdout.write('Usage: node cli <zip-file>\n');
   process.exit(1);
 }
 extractWebfontKit({

@@ -97,14 +97,22 @@ interface Font {
     src: string;
     top: number;
   };
-  monotypeVariationId: string; // TODO maybe the default?
+  import?: {
+    code: {
+      licenseText?: string;
+      trackerScript?: string;
+    };
+    urlBase: string;
+  };
+  kitVersion?: string;
+  monotypeVariationId?: string; // TODO maybe the default?
   selectedVariation?: FontVariation; // added in `selectFontVariation()`
   variations: FontVariation[];
 }
 interface FontVariation {
   displayName: string; // <- record.fontVariantDisplayName
   fontFamily: string; // <- `${record.cssFamilyName} ${record.fontVariantDisplayName}`
-  monotypeVariationId: string;
+  monotypeVariationId?: string;
 }
 
 /**
@@ -170,7 +178,13 @@ interface FontLambda {
 }
 
 type FontType = 'standard' | 'upload' | 'premium';
-type FontProvider = 'rad-monotype' | 'google' | 'fonts.com' | 'fontsquirrel.com';
+type FontProvider =
+  | 'google' // TODO replace with 'Google Fonts'
+  | 'Fonts.com'
+  | 'FontShop'
+  | 'Font Squirrel'
+  | 'Linotype'
+  | 'MyFonts';
 type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 type FontStyle = 'normal' | 'italic' | 'oblique';
 type FontStretch = 'normal' | 'condensed' | 'semi-condensed' |

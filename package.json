@@ -1,12 +1,13 @@
 {
   "name": "@ginpei/rad-extract-webfont-kit",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "homepage": "https://github.com/ginpei/rad-extract-webfont-kit",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon server",
-    "lint": "eslint ./*.js src/**/*.js",
-    "test": "mocha test/setup.js  test",
+    "download-test-assets": "node scripts/download-test-assets",
+    "lint": "eslint ./*.js src test",
+    "test": "mocha --recursive test/setup.js test",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -16,7 +17,6 @@
     "@types/yauzl": "^2.9.1",
     "css": "^2.2.4",
     "fast-xml-parser": "^3.12.16",
-    "fontmin": "^0.9.7-beta",
     "tmp": "^0.1.0",
     "yauzl": "^2.10.0"
   },
