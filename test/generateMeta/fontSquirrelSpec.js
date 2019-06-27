@@ -14,13 +14,13 @@ const runOnTmp = require('./runOnTmp');
 describe('with a kit from FontSquirrel.com', () => {
   const zipFileName = 'fontsquirrel.zip';
 
-  /** @type {Error} */
+  /** @type {Error | null} */
   let error;
 
-  /** @type {IFontMeta[]} */
+  /** @type {IFontMeta[] | undefined} */
   let metaList;
 
-  /** @type {string} */
+  /** @type {string | undefined} */
   let tmpDir;
 
   describe('as ideal kit', () => {
@@ -37,11 +37,15 @@ describe('with a kit from FontSquirrel.com', () => {
     });
 
     it('returns one font meta data', () => {
-      expect(metaList.length).to.be.eq(1);
+      expect(metaList && metaList.length).to.be.eq(1);
     });
 
     it('returns output dir', () => {
-      expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+      if (!tmpDir) {
+        throw new Error('Failed to create tmp dir');
+      }
+
+      expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
     });
 
     it('creates font data', () => {
@@ -69,7 +73,7 @@ describe('with a kit from FontSquirrel.com', () => {
           },
         ],
       };
-      expect(metaList[0].font).to.be.eql(expected);
+      expect(metaList && metaList[0].font).to.be.eql(expected);
     });
 
     it('creates import files data', () => {
@@ -79,12 +83,12 @@ describe('with a kit from FontSquirrel.com', () => {
         'interstate-light-webfont.woff2',
         'interstate-light-webfont.woff',
       ];
-      expect(metaList[0].files).to.be.eql(expected);
+      expect(metaList && metaList[0].files).to.be.eql(expected);
     });
   });
 
   describe('without HTML file', () => {
-    /** @type {sinon.SinonStub} */
+    /** @type {import('sinon').SinonStub<[import('fs').PathLike, string], Promise<string[]>>} */
     let findFilesByExtension;
 
     before(async () => {
@@ -103,7 +107,8 @@ describe('with a kit from FontSquirrel.com', () => {
     });
 
     it('throws with message', () => {
-      expect(error.message).to.be.eq('Kit must contains an HTML file to parse');
+      expect(error && error.message)
+        .to.be.eq('Kit must contains an HTML file to parse');
     });
   });
 });

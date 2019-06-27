@@ -1,3 +1,4 @@
+// @ts-ignore
 const Fontmin = require('fontmin');
 const fs = require('fs');
 const path = require('path');
@@ -32,6 +33,13 @@ function extract (zipFile, entry, destPath, callback) {
       return;
     }
 
+    if (!readStream) {
+      callback(new Error(
+        'Failed to open read stream while extracting zipped file',
+      ));
+      return;
+    }
+
     readStream.on('end', () => callback(null));
 
     const writeStream = fs.createWriteStream(destPath);
@@ -50,18 +58,24 @@ function subsetFont (filePath, destPath, glyph, callback) {
     .use(Fontmin.glyph({ text: glyph }))
     .src(filePath)
     .dest(destPath);
-  fontmin.run((err) => {
-    if (err) {
-      console.error(err);
-      callback(new Error('Failed to minimize font'));
-      return;
-    }
+  fontmin.run(
+    /**
+     * @param {Error} [err]
+     */
+    (err) => {
+      if (err) {
+        console.error(err);
+        callback(new Error('Failed to minimize font'));
+        return;
+      }
 
-    callback(null);
-  });
+      callback(null);
+    },
+  );
 }
 
 /**
+ * TODO delete
  * @param {string} zipPath
  * @param {string} fontsDir
  * @param {(err: Error | null) => void} callback
@@ -70,7 +84,7 @@ function extractFontKit (zipPath, fontsDir, callback) {
   prepareDir(fontsDir);
 
   yauzl.open(zipPath, { lazyEntries: true }, (openZipError, zipFile) => {
-    if (openZipError) {
+    if (openZipError || !zipFile) {
       callback(new Error('Failed to open zip'));
       return;
     }

@@ -33,20 +33,25 @@ function readFontsComXml (srcDir) {
   const data = parser.parse(xml, options);
 
   /** @type {FontsComXmlRecord[]} */
-  const fonts = data.fonts.font.map((font) => ({
-    cssFamilyName: font.CssFamilyName,
-    displayName: font.displayName,
-    eot: path.join('Fonts/', font.eot),
-    familyName: font.FamilyName,
-    fontStretch: font.FontStretch,
-    fontStyle: font.FontStyle,
-    fontWeight: font.FontWeight,
-    psName: font.psName,
-    svg: path.join('Fonts/', font.svg),
-    ttf: path.join('Fonts/', font.ttf),
-    woff: path.join('Fonts/', font.woff),
-    woff2: path.join('Fonts/', font.woff2),
-  }));
+  const fonts = data.fonts.font.map(
+    /**
+     * @param {any} font
+     */
+    (font) => ({
+      cssFamilyName: font.CssFamilyName,
+      displayName: font.displayName,
+      eot: path.join('Fonts/', font.eot),
+      familyName: font.FamilyName,
+      fontStretch: font.FontStretch,
+      fontStyle: font.FontStyle,
+      fontWeight: font.FontWeight,
+      psName: font.psName,
+      svg: path.join('Fonts/', font.svg),
+      ttf: path.join('Fonts/', font.ttf),
+      woff: path.join('Fonts/', font.woff),
+      woff2: path.join('Fonts/', font.woff2),
+    }),
+  );
   return fonts;
 }
 

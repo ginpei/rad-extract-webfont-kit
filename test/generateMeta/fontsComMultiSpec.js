@@ -12,13 +12,13 @@ const runOnTmp = require('./runOnTmp');
 describe('Fonts.com including multi fonts', () => {
   const zipFileName = 'fontscom-multi.zip';
 
-  /** @type {Error} */
+  /** @type {Error | null} */
   let error;
 
-  /** @type {IFontMeta[]} */
+  /** @type {IFontMeta[] | undefined} */
   let metaList;
 
-  /** @type {string} */
+  /** @type {string | undefined} */
   let tmpDir;
 
   before(async () => {
@@ -34,11 +34,15 @@ describe('Fonts.com including multi fonts', () => {
   });
 
   it('returns one font meta data', () => {
-    expect(metaList.length).to.be.eq(1);
+    expect(metaList && metaList.length).to.be.eq(1);
   });
 
   it('returns output dir', () => {
-    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+    if (!tmpDir) {
+      throw new Error('Failed to create tmp dir');
+    }
+
+    expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
   });
 
   it('creates font data', () => {
@@ -125,10 +129,14 @@ Imaging with any questions regarding Web Fonts:  http://www.fonts.com
         },
       ],
     };
-    expect(metaList[0].font).to.be.eql(expected);
+    expect(metaList && metaList[0].font).to.be.eql(expected);
   });
 
   it('creates import files data', () => {
+    if (!metaList) {
+      throw new Error('Failed to prepare meta list');
+    }
+
     const { files } = metaList[0];
     expect(files.length).to.be.eql(74);
     expect(files[0]).to.be.eql('demo-async.css');

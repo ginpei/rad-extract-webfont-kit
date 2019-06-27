@@ -12,13 +12,13 @@ const runOnTmp = require('./runOnTmp');
 describe('fontsCom', () => {
   const zipFileName = 'fontscom.zip';
 
-  /** @type {Error} */
+  /** @type {Error | null} */
   let error;
 
-  /** @type {IFontMeta[]} */
+  /** @type {IFontMeta[] | undefined} */
   let metaList;
 
-  /** @type {string} */
+  /** @type {string | undefined} */
   let tmpDir;
 
   before(async () => {
@@ -37,11 +37,15 @@ describe('fontsCom', () => {
   });
 
   it('returns one font meta data', () => {
-    expect(metaList.length).to.be.eq(1);
+    expect(metaList && metaList.length).to.be.eq(1);
   });
 
   it('returns output dir', () => {
-    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+    if (!tmpDir) {
+      throw new Error('Failed to create tmp dir');
+    }
+
+    expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
   });
 
   it('creates font data', () => {
@@ -84,7 +88,7 @@ Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
         },
       ],
     };
-    expect(metaList[0].font).to.be.eql(expected);
+    expect(metaList && metaList[0].font).to.be.eql(expected);
   });
 
   it('creates import files data', () => {
@@ -95,6 +99,6 @@ Imaging with any questions regarding Web Fonts:  http://webfonts.fonts.com
       'Fonts/9682b901-d652-45f0-b484-bbd12085ad67.ttf',
       'Fonts/92ab452d-729a-46ce-b8dc-cf2cb5146c7a.svg',
     ];
-    expect(metaList[0].files).to.be.eql(expected);
+    expect(metaList && metaList[0].files).to.be.eql(expected);
   });
 });

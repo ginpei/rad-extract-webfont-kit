@@ -29,9 +29,16 @@ function filterFontFaceRule (rules) {
 }
 module.exports.filterFontFaceRule = filterFontFaceRule;
 
+/**
+ * @param {string} cssFilePath
+ */
 async function findOneFontFaceRule (cssFilePath) {
   // assume it contains only 1 font-face
   const ast = await parseCssFile(cssFilePath);
+  if (!ast.stylesheet) {
+    throw new Error('Stylesheet has no rules');
+  }
+
   const rules = filterFontFaceRule(ast.stylesheet.rules);
   if (rules.length < 1) {
     throw new Error('Failed to find @font-face at-rule');
@@ -60,7 +67,12 @@ module.exports.findOneFontFaceRule = findOneFontFaceRule;
  */
 function parseUrlDataType (text) {
   const rxSrc = /url\((?:'(.*?)'|"(.*?)")\)(?: format\((?:'(.*?)'|"(.*?)")\))?/;
-  const [, file1, file2, format1, format2] = text.match(rxSrc);
+  const [,
+    file1 = '',
+    file2 = '',
+    format1 = '',
+    format2 = '',
+  ] = text.match(rxSrc) || [];
   const file = file1 || file2;
   const format = format1 || format2;
   return [file, format];
@@ -80,12 +92,16 @@ module.exports.isDeclaration = isDeclaration;
  * @returns {string}
  */
 function getFontFamilyValue (fontFaceRule) {
-  /** @type {import('css').Declaration | null} */
+  if (!fontFaceRule.declarations) {
+    throw new Error('No declarations found');
+  }
+
+  /** @type {import('css').Declaration | undefined} */
   const fontFamilyDec = fontFaceRule.declarations.find((dec) => {
     if (!isDeclaration(dec)) { return false; }
     return dec.property === 'font-family';
   });
-  if (!fontFamilyDec) {
+  if (!fontFamilyDec || !fontFamilyDec.value) {
     return '';
   }
 
@@ -100,16 +116,20 @@ module.exports.getFontFamilyValue = getFontFamilyValue;
  * @returns {string[]}
  */
 function getFontFilePaths (fontFaceRule) {
+  if (!fontFaceRule.declarations) {
+    throw new Error('No declarations found');
+  }
+
   /** @type {import('css').Declaration[]} */
   const srcDecList = fontFaceRule.declarations.filter(
     (dec) => isDeclaration(dec) && dec.property === 'src',
   );
 
-  // rewrite these with flat() when migrated Node.js v12
+  // rewrite these with flat() when migrated to Node.js v12
   /** @type {Set<string>} */
   const paths = new Set();
-  srcDecList.forEach((dec) => {
-    dec.value.split(',')
+  srcDecList.forEach(({ value = '' }) => {
+    value.split(',')
       .map((v) => parseUrlDataType(v)) // [[filePath, format], ...]
       .forEach(([file]) => {
         let p = file;

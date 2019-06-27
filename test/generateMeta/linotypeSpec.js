@@ -12,13 +12,13 @@ const runOnTmp = require('./runOnTmp');
 describe('Linotype', () => {
   const zipFileName = 'linotype.zip';
 
-  /** @type {Error} */
+  /** @type {Error | null} */
   let error;
 
-  /** @type {IFontMeta[]} */
+  /** @type {IFontMeta[] | undefined} */
   let metaList;
 
-  /** @type {string} */
+  /** @type {string | undefined} */
   let tmpDir;
 
   before(async () => {
@@ -37,11 +37,15 @@ describe('Linotype', () => {
   });
 
   it('returns one font meta data', () => {
-    expect(metaList.length).to.be.eq(1);
+    expect(metaList && metaList.length).to.be.eq(1);
   });
 
   it('returns output dir', () => {
-    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+    if (!tmpDir) {
+      throw new Error('Failed to create tmp dir');
+    }
+
+    expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
   });
 
   it('creates font data', () => {
@@ -88,7 +92,7 @@ mtTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.f
         },
       ],
     };
-    expect(metaList[0].font).to.be.eql(expected);
+    expect(metaList && metaList[0].font).to.be.eql(expected);
   });
 
   it('creates import files data', () => {
@@ -99,6 +103,6 @@ mtTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.f
       'Fonts/1289922/b8fd6352-55cc-4d34-91d6-400e852f539b.ttf',
       'Fonts/1289922/c8cd2cb2-3158-48fd-aeb1-d28e177a4234.svg',
     ];
-    expect(metaList[0].files).to.be.eql(expected);
+    expect(metaList && metaList[0].files).to.be.eql(expected);
   });
 });

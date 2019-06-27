@@ -12,13 +12,13 @@ const runOnTmp = require('./runOnTmp');
 describe('with a kit from MyFonts', () => {
   const zipFileName = 'myfonts.zip';
 
-  /** @type {Error} */
+  /** @type {Error | null} */
   let error;
 
-  /** @type {IFontMeta[]} */
+  /** @type {IFontMeta[] | undefined} */
   let metaList;
 
-  /** @type {string} */
+  /** @type {string | undefined} */
   let tmpDir;
 
   before(async () => {
@@ -37,11 +37,15 @@ describe('with a kit from MyFonts', () => {
   });
 
   it('returns one font meta data', () => {
-    expect(metaList.length).to.be.eq(1);
+    expect(metaList && metaList.length).to.be.eq(1);
   });
 
   it('returns output dir', () => {
-    expect(metaList[0].dir).to.be.eq(path.join(tmpDir));
+    if (!tmpDir) {
+      throw new Error('Failed to create tmp dir');
+    }
+
+    expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
   });
 
   it('creates font data', () => {
@@ -90,7 +94,7 @@ describe('with a kit from MyFonts', () => {
         },
       ],
     };
-    expect(metaList[0].font).to.be.eql(expected);
+    expect(metaList && metaList[0].font).to.be.eql(expected);
   });
 
   it('creates import files data', () => {
@@ -100,6 +104,6 @@ describe('with a kit from MyFonts', () => {
       'MyFontsWebfontsKit/webfonts/2B8BF3_0_0.woff',
       'MyFontsWebfontsKit/webfonts/2B8BF3_0_0.ttf',
     ];
-    expect(metaList[0].files).to.be.eql(expected);
+    expect(metaList && metaList[0].files).to.be.eql(expected);
   });
 });

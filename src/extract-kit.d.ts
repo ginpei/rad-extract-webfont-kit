@@ -11,7 +11,7 @@ interface IExtractKitOptions {
   /**
    * Output directory where whole files are extracted directly.
    */
-  outDir?: string;
+  outDir: string;
 
   /**
    * If show all logs.

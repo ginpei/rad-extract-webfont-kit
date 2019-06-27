@@ -83,6 +83,13 @@ function extractEntry (zipFile, entry, dest) {
         return;
       }
 
+      if (!readStream) {
+        reject(new Error(
+          'Failed to open read stream while extracting zipped file',
+        ));
+        return;
+      }
+
       const filePath = path.join(dest, fileName);
       const writeStream = fs.createWriteStream(filePath);
       readStream.on('end', () => resolve());
