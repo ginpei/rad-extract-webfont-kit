@@ -11,6 +11,8 @@ const files = [
   'fontsquirrel.zip',
   'linotype.zip',
   'myfonts.zip',
+  'transfonter.zip',
+  'transfonter-multi.zip',
 ];
 
 /**

@@ -100,7 +100,10 @@ describe('with a kit from Transfonter', () => {
     });
 
     it('throws error', () => {
-      expect(error).not.to.be.null;
+      if (!error) {
+        throw new Error('Error must be thrown');
+      }
+      expect(error.message).to.be.eql('It contains more than 1 @font-face at-rules');
     });
   });
 });
