@@ -9,6 +9,11 @@ module.exports.isFontShop = (dir) => new Promise(async (resolve, reject) => {
   try {
     // it should only one sub dir
     const [subDirName] = await misc.findSubDirs(dir);
+    if (!subDirName) {
+      resolve(false);
+      return;
+    }
+
     const subDirPath = path.join(dir, subDirName);
     const [htmlFileName] = await misc.findFilesByExtension(
       subDirPath,

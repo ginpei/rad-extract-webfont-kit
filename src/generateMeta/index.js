@@ -28,6 +28,11 @@ const {
   isMyFonts,
 } = require('./myFonts');
 
+const {
+  createTransfonterMeta,
+  isTransfonter,
+} = require('./transfonter');
+
 /**
  * Generate meta data JSON file to use web fonts.
  * @param {string} dir
@@ -56,6 +61,10 @@ module.exports = async (dir) => {
 
   if (await isMyFonts(dir)) {
     return createMyFontsMeta(dir);
+  }
+
+  if (await isTransfonter(dir)) {
+    return createTransfonterMeta(dir);
   }
 
   throw new Error('Unsupported type of webfont kit');
