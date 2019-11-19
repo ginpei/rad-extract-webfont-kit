@@ -4,7 +4,6 @@
   "homepage": "https://github.com/ginpei/rad-extract-webfont-kit",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon server",
     "download-test-assets": "node scripts/download-test-assets",
     "lint": "eslint ./*.js src test",
     "test": "mocha --recursive test/setup.js test",
