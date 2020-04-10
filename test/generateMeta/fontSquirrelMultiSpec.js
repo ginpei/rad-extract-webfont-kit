@@ -7,8 +7,6 @@
 
 const { expect } = require('chai');
 const path = require('path');
-const sinon = require('sinon');
-const misc = require('../../src/misc');
 const runOnTmp = require('./runOnTmp');
 
 describe('with a kit from FontSquirrel.com including multi fonts', () => {
