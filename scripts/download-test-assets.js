@@ -8,6 +8,7 @@ const files = [
   'fontscom-multi.zip',
   'fontscom.zip',
   'fontshop-multiFamilies.zip',
+  'fontsquirrel-multi.zip',
   'fontsquirrel.zip',
   'linotype.zip',
   'myfonts.zip',

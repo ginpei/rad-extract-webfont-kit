@@ -30,7 +30,9 @@ function filterFontFaceRule (rules) {
 module.exports.filterFontFaceRule = filterFontFaceRule;
 
 /**
+ * DEPRECATED
  * @param {string} cssFilePath
+ * @deprecated Use `findFontFaceRules()` instead.
  */
 async function findOneFontFaceRule (cssFilePath) {
   // assume it contains only 1 font-face
@@ -51,6 +53,20 @@ async function findOneFontFaceRule (cssFilePath) {
   return fontFaceRule;
 }
 module.exports.findOneFontFaceRule = findOneFontFaceRule;
+
+/**
+ * @param {string} cssFilePath
+ */
+async function findFontFaceRules (cssFilePath) {
+  const ast = await parseCssFile(cssFilePath);
+  if (!ast.stylesheet) {
+    throw new Error('Stylesheet has no rules');
+  }
+
+  const rules = filterFontFaceRule(ast.stylesheet.rules);
+  return rules;
+}
+module.exports.findFontFaceRules = findFontFaceRules;
 
 /**
  * Parse `src` values of `@font-face`.
@@ -77,6 +93,7 @@ function parseUrlDataType (text) {
   const format = format1 || format2;
   return [file, format];
 }
+module.exports.parseUrlDataType = parseUrlDataType;
 
 /**
  * @param {import('css').Declaration | import('css').Comment} declaration

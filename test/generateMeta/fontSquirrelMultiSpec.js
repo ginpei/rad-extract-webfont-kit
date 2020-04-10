@@ -7,12 +7,10 @@
 
 const { expect } = require('chai');
 const path = require('path');
-const sinon = require('sinon');
-const misc = require('../../src/misc');
 const runOnTmp = require('./runOnTmp');
 
-describe('WIP with a kit from FontSquirrel.com', () => {
-  const zipFileName = 'fontsquirrel.zip';
+describe('with a kit from FontSquirrel.com including multi fonts', () => {
+  const zipFileName = 'fontsquirrel-multi.zip';
 
   /** @type {Error | null} */
   let error;
@@ -37,7 +35,7 @@ describe('WIP with a kit from FontSquirrel.com', () => {
     });
 
     it('returns one font meta data', () => {
-      expect(metaList && metaList.length).to.be.eq(1);
+      expect(metaList && metaList.length).to.be.eq(12);
     });
 
     it('returns output dir', () => {
@@ -48,11 +46,11 @@ describe('WIP with a kit from FontSquirrel.com', () => {
       expect(metaList && metaList[0].dir).to.be.eq(path.join(tmpDir));
     });
 
-    it('creates font data', () => {
+    it('creates first font data', () => {
       /** @type {Font} */
       const expected = {
-        displayName: 'Interstate-Light Regular',
-        fontFamily: 'interstatelight',
+        displayName: 'JJ Rg Bold Italic',
+        fontFamily: 'jjbold_italic',
         fontProvider: 'Font Squirrel',
         fontProviderWebSite: 'fontsquirrel.com',
         fontType: 'upload',
@@ -69,49 +67,53 @@ describe('WIP with a kit from FontSquirrel.com', () => {
         selectedVariation: undefined,
         variations: [
           {
-            displayName: 'Interstate-Light Regular',
-            fontFamily: 'interstatelight',
+            displayName: 'JJ Rg Bold Italic',
+            fontFamily: 'jjbold_italic',
           },
         ],
       };
       expect(metaList && metaList[0].font).to.be.eql(expected);
     });
 
-    it('creates import files data', () => {
+    it('creates display name and font family for each', () => {
+      if (!metaList) {
+        throw new Error('metaList is expected to be generated');
+      }
+
+      const pairs = metaList.map(
+        ({ font }) => [font.displayName, font.fontFamily],
+      );
+
+      expect(pairs).to.deep.eq([
+        ['JJ Rg Bold Italic', 'jjbold_italic'],
+        ['JJ Rg Bold', 'jjbold'],
+        ['JJ Bk Italic', 'jjbook_italic'],
+        ['JJ Bk Regular', 'jjbook'],
+        ['JJ Bl Italic', 'jjblack_italic'],
+        ['JJ Bl Regular', 'jjblack'],
+        ['JJ El Italic', 'jjextralight_italic'],
+        ['JJ El Regular', 'jjextralight'],
+        ['JJ Lt Italic', 'jjlight_italic'],
+        ['JJ Lt Regular', 'jjlight'],
+        ['JJ Rg Italic', 'jjregular_italic'],
+        ['JJ Rg Regular', 'jjregular'],
+      ]);
+    });
+
+    it('creates first import files data', () => {
       const expected = [
         'stylesheet.css',
-        'interstate-light-webfont.eot',
-        'interstate-light-webfont.woff2',
-        'interstate-light-webfont.woff',
+        'jj_bd_it-webfont.woff',
       ];
       expect(metaList && metaList[0].files).to.be.eql(expected);
     });
-  });
 
-  describe('without HTML file', () => {
-    /** @type {import('sinon').SinonStub<[string], Promise<string>>} */
-    let findFilesByExtension;
-
-    before(async () => {
-      findFilesByExtension = sinon.stub(misc, 'readText')
-        .returns(Promise.reject(
-          new Error('ENOENT: no such file or directory, open \'xxx\''),
-        ));
-
-      ({
-        error,
-        metaList,
-        tmpDir,
-      } = await runOnTmp(zipFileName));
-    });
-
-    after(() => {
-      findFilesByExtension.restore();
-    });
-
-    it('throws with message', () => {
-      expect(error && error.message)
-        .to.be.eq('Kit must contains an HTML file to parse');
+    it('creates last import files data', () => {
+      const expected = [
+        'stylesheet.css',
+        'jj_rg-webfont.woff',
+      ];
+      expect(metaList && metaList[11].files).to.be.eql(expected);
     });
   });
 });
