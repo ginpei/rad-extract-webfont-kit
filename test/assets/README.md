@@ -8,5 +8,6 @@ Expexted file list.
 - `test/assets/fontscom.zip`
 - `test/assets/fontshop.zip`
 - `test/assets/fontsquirrel.zip`
+- `test/assets/fontsquirrel-multi.zip`
 - `test/assets/linotype.zip`
 - `test/assets/myfonts.zip`

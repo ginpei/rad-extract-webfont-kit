@@ -29,19 +29,53 @@ module.exports.isFontSquirrel = (srcDir) => new Promise((resolve, reject) => {
 });
 
 /**
+ * @param {import('css').FontFace} fontFaceRule
+ * @returns {string}
+ */
+function getFilePrefix (fontFaceRule) {
+  if (!fontFaceRule.declarations) {
+    throw new Error('Inconsistent font face rule: no declarations');
+  }
+
+  /** @type {import('css').Declaration | undefined} */
+  const srcDec = fontFaceRule.declarations.find(
+    (v) => css.isDeclaration(v) && v.property === 'src',
+  );
+  if (!srcDec) {
+    throw new Error('Inconsistent font face rule: no src declaration');
+  }
+  if (!srcDec.value) {
+    throw new Error('Inconsistent font face rule: no src value');
+  }
+
+  // assume it's like "nice_font-webfont.woff"
+  const [fontFileName] = css.parseUrlDataType(srcDec.value);
+  const iDash = fontFileName.lastIndexOf('-');
+  if (iDash < 0) {
+    throw new Error('Unknown font file name structure');
+  }
+  const prefix = fontFileName.slice(0, iDash);
+
+  return prefix;
+}
+
+/**
  * @param {string} dir
+ * @param {string} filePrefix
  * @returns {Promise<string>}
  */
-async function getDisplayName (dir) {
+async function getDisplayName (dir, filePrefix) {
   const startTag = '<div id="header">';
   const endTag = '</div>';
 
-  // assume there is only 1 HTML file
-  const [htmlPath] = await misc.findFilesByExtension(dir, '.html');
-  if (!htmlPath) {
+  const htmlPath = `${filePrefix}-demo.html`;
+  let html = '';
+  try {
+    html = await misc.readText(path.join(dir, htmlPath));
+  } catch (error) {
+    console.error(error);
     throw new Error('Kit must contains an HTML file to parse');
   }
-  const html = await misc.readText(path.join(dir, htmlPath));
 
   const startsAt = html.indexOf(startTag) + startTag.length;
   const endsAt = html.indexOf(endTag, startsAt);
@@ -62,7 +96,8 @@ async function buildFontData (fontFaceRule, dir) {
     throw new Error('Font-family must be set');
   }
 
-  const displayName = await getDisplayName(dir);
+  const filePrefix = getFilePrefix(fontFaceRule);
+  const displayName = await getDisplayName(dir, filePrefix);
 
   /** @type {Font} */
   const font = {
@@ -112,16 +147,21 @@ function getFilePaths (fontFaceRule) {
 // eslint-disable-next-line arrow-body-style
 module.exports.createFontSquirrelMeta = async (srcDir) => {
   const cssFilePath = path.join(srcDir, 'stylesheet.css');
-  const fontFaceRule = await css.findOneFontFaceRule(cssFilePath);
+  const fontFaceRules = await css.findFontFaceRules(cssFilePath);
 
-  const files = getFilePaths(fontFaceRule);
-  const font = await buildFontData(fontFaceRule, srcDir);
+  const pDataList = fontFaceRules.map(async (rule) => {
+    const files = getFilePaths(rule);
+    const font = await buildFontData(rule, srcDir);
 
-  /** @type {IFontMeta} */
-  const data = {
-    dir: srcDir,
-    files,
-    font,
-  };
-  return [data];
+    /** @type {IFontMeta} */
+    const data = {
+      dir: srcDir,
+      files,
+      font,
+    };
+    return data;
+  });
+
+  const meta = await Promise.all(pDataList);
+  return meta;
 };
