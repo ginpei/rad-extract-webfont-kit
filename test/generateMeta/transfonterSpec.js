@@ -106,4 +106,53 @@ describe('with a kit from Transfonter', () => {
       expect(error.message).to.be.eql('It contains more than 1 @font-face at-rules');
     });
   });
+
+  // RAD-4314 Failed to parse webfont kit from Transfonter
+  describe('heading with style attr', () => {
+    const zipFileName = 'transfonter-styledHeading.zip';
+
+    before(async () => {
+      ({
+        error,
+        metaList,
+        tmpDir,
+      } = await runOnTmp(zipFileName));
+    });
+
+    it('runs without error', () => {
+      if (error) {
+        console.error(error);
+      }
+      expect(error).to.be.null;
+    });
+
+    it('creates font data', () => {
+      /** @type {Font} */
+      const expected = {
+        displayName: 'Don Julio Regular',
+        fontFamily: 'Don Julio',
+        fontProvider: 'Transfonter',
+        fontProviderWebSite: 'transfonter.org',
+        fontType: 'upload',
+        image: {
+          height: '25px',
+          src: '',
+          top: 0,
+        },
+        import: {
+          code: {},
+          urlBase: '',
+        },
+        kitVersion: '0',
+        selectedVariation: undefined,
+        variations: [
+          {
+            displayName: 'Don Julio Regular',
+            fontFamily: 'Don Julio',
+          },
+        ],
+      };
+      expect(metaList && metaList[0].font).to.be.eql(expected);
+    });
+  });
 });

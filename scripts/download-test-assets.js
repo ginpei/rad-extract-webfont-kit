@@ -14,6 +14,7 @@ const files = [
   'myfonts.zip',
   'transfonter.zip',
   'transfonter-multi.zip',
+  'transfonter-styledHeading.zip',
 ];
 
 /**

@@ -109,12 +109,23 @@ async function buildFontData (fontFaceRule, dir) {
  * @returns {Promise<string>}
  */
 async function getDisplayName (dir) {
-  const startTag = '<h1>';
+  const startTag = /<h1(?:[^>]*)?>/;
   const endTag = '</h1>';
 
   const html = await misc.readText(path.join(dir, htmlFileName));
 
-  const startsAt = html.indexOf(startTag) + startTag.length;
+  const tagStartsAt = html.search(startTag);
+  if (tagStartsAt < 0) {
+    throw new Error('Start tag not found');
+  }
+
+  const startTagMatch = html.match(startTag);
+  if (!startTagMatch) {
+    throw new Error('Matched but unmatched');
+  }
+  const startTagLength = startTagMatch[0].length;
+
+  const startsAt = tagStartsAt + startTagLength;
   const endsAt = html.indexOf(endTag, startsAt);
   const content = html.slice(startsAt, endsAt);
 
